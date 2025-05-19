@@ -6,6 +6,7 @@ import Find.read.Read.models.User;
 import Find.read.Read.service.NovelService;
 import Find.read.Read.service.UserService;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -17,7 +18,7 @@ import java.util.List;
 
 @Controller
 public class HistoryController {
-
+     @Autowired
     private final UserService userService;
     private final NovelService novelService;
 
