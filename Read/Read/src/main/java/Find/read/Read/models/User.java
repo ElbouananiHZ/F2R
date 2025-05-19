@@ -1,14 +1,13 @@
 package Find.read.Read.models;
 
+import Find.read.Read.enums.NovelTag;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Document(collection = "users")
 public class User {
@@ -20,6 +19,7 @@ public class User {
     private String password;
     private String role; // "ADMIN", "AUTHOR", or "VISITOR"
     private List<Comment> comments;
+
     // Constructors
     private LocalDate lastUsernameChangeDate;
     private LocalDate registrationDate;
@@ -28,8 +28,97 @@ public class User {
 
     private Set<String> viewedNovels = new LinkedHashSet<>();// Maintains insertion order
     private LocalDateTime lastViewedDate;
+    private Map<NovelTag, Integer> tagPreferences = new HashMap<>();
+
+    private Map<String, LocalDateTime> novelViewTimes = new HashMap<>();
+    private Set<String> ratedNovels = new HashSet<>();
+
+    private Map<String, Integer> categoryPreferences = new HashMap<>();
+    private Map<String, Integer> novelViewCounts = new HashMap<>();
+    private Map<String, Duration> readingTimePerNovel = new HashMap<>();
+    private Set<String> likedNovels = new HashSet<>();
+    private Set<String> completedNovels = new HashSet<>();
+
+    public Map<NovelTag, Integer> getTagPreferences() {
+        return tagPreferences;
+    }
+
+    public void setTagPreferences(Map<NovelTag, Integer> tagPreferences) {
+        this.tagPreferences = tagPreferences;
+    }
+
+    public void setCategoryPreferences(Map<String, Integer> categoryPreferences) {
+        this.categoryPreferences = categoryPreferences;
+    }
+
+    public Map<String, Integer> getNovelViewCounts() {
+        return novelViewCounts;
+    }
+
+    public void setNovelViewCounts(Map<String, Integer> novelViewCounts) {
+        this.novelViewCounts = novelViewCounts;
+    }
+
+    public Map<String, Duration> getReadingTimePerNovel() {
+        return readingTimePerNovel;
+    }
+
+    public void setReadingTimePerNovel(Map<String, Duration> readingTimePerNovel) {
+        this.readingTimePerNovel = readingTimePerNovel;
+    }
 
 
+
+    public void setLikedNovels(Set<String> likedNovels) {
+        this.likedNovels = likedNovels;
+    }
+
+    public Set<String> getCompletedNovels() {
+        return completedNovels;
+    }
+
+    public void setCompletedNovels(Set<String> completedNovels) {
+        this.completedNovels = completedNovels;
+    }
+
+    // Add these methods
+    public void incrementViewCount(String novelId) {
+        novelViewCounts.merge(novelId, 1, Integer::sum);
+    }
+
+    public void addReadingTime(String novelId, Duration duration) {
+        readingTimePerNovel.merge(novelId, duration, Duration::plus);
+    }
+    public Map<String, Integer> getCategoryPreferences() {
+        return categoryPreferences;
+    }
+
+    public void updateCategoryPreference(String category, int increment) {
+        categoryPreferences.merge(category, increment, Integer::sum);
+    }
+
+
+    public Map<String, LocalDateTime> getNovelViewTimes() {
+        return novelViewTimes;
+    }
+
+    public void setNovelViewTimes(Map<String, LocalDateTime> novelViewTimes) {
+        this.novelViewTimes = novelViewTimes;
+    }
+
+    public Set<String> getRatedNovels() {
+        return ratedNovels;
+    }
+
+    public void setRatedNovels(Set<String> ratedNovels) {
+        this.ratedNovels = ratedNovels;
+    }
+
+
+
+    public void updateTagPreference(NovelTag tag, int increment) {
+        tagPreferences.merge(tag, increment, Integer::sum);
+    }
     // Getters and Setters
     public Set<String> getViewedNovels() {
         return viewedNovels;

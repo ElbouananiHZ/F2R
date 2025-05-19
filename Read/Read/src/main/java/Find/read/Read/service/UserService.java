@@ -11,6 +11,8 @@ import java.util.*;
 
 @Service
 public class UserService {
+    @Autowired
+
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -124,6 +126,21 @@ public class UserService {
 
 
     }
+    public User findById(String userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
+    }
+    public void markNovelComplete(String userId, String novelId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
+
+        // Ajouter le novelId dans la collection des romans terminés
+        user.getCompletedNovels().add(novelId);
+
+        // Sauvegarder les modifications
+        userRepository.save(user);
+    }
+
 
 }
 

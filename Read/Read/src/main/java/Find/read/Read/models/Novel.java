@@ -4,6 +4,7 @@ import Find.read.Read.enums.NovelCategory;
 import Find.read.Read.enums.NovelTag;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.CompoundIndex;
+import org.springframework.data.mongodb.core.index.CompoundIndexes;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -13,15 +14,38 @@ import java.util.Set;
 
 @Document(collection = "novels")
 @CompoundIndex(def = "{'name': 'text', 'category': 'text', 'description': 'text'}")
+@CompoundIndexes({
+        @CompoundIndex(name = "tags_rating_idx", def = "{'tags': 1, 'averageRating': -1}"),
+        @CompoundIndex(name = "rating_idx", def = "{'averageRating': -1}")
+})
 public class Novel {
+
+
+
+
+
     @Id
     private String id;
     @DBRef(lazy = true)
     private List<Page> pages = new ArrayList<>();
     private String authorId;
-    // <-- Make sure this is here
+    private byte[] imageData;  // Image data for internal storage or retrieval
+    private String name;
+    private String summary;
+    private String pic;
+    private NovelCategory category;
+    private Set<NovelTag> tags;
+    private String imageName;  // Store the name of the file here
+    private int totalRating = 0;
+    private int ratingCount = 0;
+    private Double rating;
+    private double averageRating; // Field for average rating
 
+    private String authorName;
 
+    public String getAuthorName() {
+        return authorName;
+    }
     public String getAuthorId() {
         return authorId;
     }
@@ -42,19 +66,10 @@ public class Novel {
         this.pages = pages;
     }
 
-    private byte[] imageData;  // Image data for internal storage or retrieval
-    private String name;
-    private String summary;
-    private String pic;
-    private NovelCategory category;
-    private Set<NovelTag> tags;
-    private String imageName;  // Store the name of the file here
-    private int totalRating = 0;
-    private int ratingCount = 0;
-    private Double rating;
-    private double averageRating; // Field for average rating
+    public void setAuthorName(String authorName) {
+        this.authorName = authorName;
+    }
 
-    // Constructors, getters, setters...
 
     public double getAverageRating() {
         return averageRating;
@@ -64,14 +79,14 @@ public class Novel {
         this.averageRating = averageRating;
     }
 
-    // Method for calculating the average rating
+
 
 
     public double getAverageRatingRounded() {
         return Math.round(getAverageRating() * 10.0) / 10.0;
     }
 
-    // Getters and Setters
+
     public void setRating(Double rating) {
         this.rating = rating;
     }

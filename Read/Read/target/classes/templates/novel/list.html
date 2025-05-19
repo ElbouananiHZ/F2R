@@ -2,1056 +2,683 @@
 <html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Plateforme professionnelle de classement et d'évaluation de romans">
-    <title>Classement Expert | NovelMetrics Pro</title>
-
+    <title>Classement des Romans</title>
     <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
-
-    <!-- AOS Animation -->
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-
     <style>
-        :root {
-            --primary-900: #0a1a2f;
-            --primary-800: #0f2b4a;
-            --primary-700: #1a3d64;
-            --primary-600: #2a5688;
-            --primary-500: #3a75b4;
-            --primary-400: #5c9ad9;
-            --primary-300: #8cbae6;
-            --primary-200: #b8d4f0;
-            --primary-100: #e1edf9;
-
-            --neutral-900: #121212;
-            --neutral-800: #2a2a2a;
-            --neutral-700: #404040;
-            --neutral-600: #5a5a5a;
-            --neutral-500: #767676;
-            --neutral-400: #9e9e9e;
-            --neutral-300: #c7c7c7;
-            --neutral-200: #e1e1e1;
-            --neutral-100: #f5f5f5;
-            --neutral-50: #fafafa;
-
-            --accent-analogous: #2d7d9a;
-            --accent-complement: #ff7d47;
-            --accent-triadic: #9a2d7d;
-
-            --success-500: #28a745;
-            --warning-500: #ffc107;
-            --danger-500: #dc3545;
-            --info-500: #17a2b8;
-
-            --border-radius-sm: 4px;
-            --border-radius-md: 8px;
-            --border-radius-lg: 12px;
-            --border-radius-xl: 16px;
-            --border-radius-xxl: 24px;
-
-            --box-shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
-            --box-shadow-md: 0 4px 12px rgba(0,0,0,0.1);
-            --box-shadow-lg: 0 8px 24px rgba(0,0,0,0.12);
-            --box-shadow-xl: 0 12px 36px rgba(0,0,0,0.15);
-
-            --transition-fast: 0.15s ease-in-out;
-            --transition-medium: 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-            --transition-slow: 0.45s cubic-bezier(0.32, 0.72, 0, 1);
+        .recommendations-container {
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            padding: 10px;
+            margin-top: 10px;
         }
 
+        .recommendations-header {
+            color: #0d6efd;
+            font-size: 0.9rem;
+        }
+
+        .recommended-novel {
+            background-color: white;
+            transition: all 0.2s ease;
+        }
+
+        .recommended-novel:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
         body {
-            font-family: 'Inter', sans-serif;
-            color: var(--neutral-800);
-            background-color: var(--neutral-50);
-            line-height: 1.6;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
+            background-color: #f8f9fa;
+            padding-top: 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-
-        h1, h2, h3, h4, h5, h6 {
-            font-family: 'Libre Baskerville', serif;
-            font-weight: 700;
-            color: var(--primary-900);
-        }
-
-        .navbar {
-            background-color: white;
-            box-shadow: var(--box-shadow-sm);
-            padding: 1rem 2rem;
-        }
-
-        .navbar-brand {
-            font-family: 'Libre Baskerville', serif;
-            font-weight: 700;
-            font-size: 1.75rem;
-            color: var(--primary-800);
+        .toolbar {
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            gap: 0.75rem;
+            padding: 15px;
+            background: #fff;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            border-radius: 8px;
         }
-
-        .navbar-brand .logo-icon {
-            color: var(--primary-500);
-            font-size: 1.5rem;
+        .auth-section {
+            display: flex;
+            gap: 10px;
+            align-items: center;
         }
-
-        .nav-link {
-            font-weight: 500;
-            color: var(--neutral-700);
-            padding: 0.5rem 1rem;
-            border-radius: var(--border-radius-md);
-            transition: var(--transition-fast);
+        .novel-row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 30px;
         }
-
-        .nav-link:hover, .nav-link.active {
-            color: var(--primary-600);
-            background-color: var(--primary-100);
-        }
-
-        .nav-link.active {
-            font-weight: 600;
-        }
-
-        .btn {
-            font-weight: 500;
-            border-radius: var(--border-radius-md);
-            padding: 0.625rem 1.25rem;
-            transition: var(--transition-fast);
-            letter-spacing: 0.02em;
-        }
-
-        .btn-primary {
-            background-color: var(--primary-600);
-            border-color: var(--primary-600);
-        }
-
-        .btn-primary:hover {
-            background-color: var(--primary-700);
-            border-color: var(--primary-700);
-        }
-
-        .btn-outline-primary {
-            color: var(--primary-600);
-            border-color: var(--primary-600);
-        }
-
-        .btn-outline-primary:hover {
-            background-color: var(--primary-100);
-            color: var(--primary-700);
-            border-color: var(--primary-700);
-        }
-
-        .search-container {
-            position: relative;
-            max-width: 500px;
-            width: 100%;
-        }
-
-        .search-input {
-            border-radius: var(--border-radius-xl);
-            padding: 0.75rem 1.5rem;
-            border: 1px solid var(--neutral-200);
-            transition: var(--transition-medium);
-            font-size: 0.95rem;
-        }
-
-        .search-input:focus {
-            border-color: var(--primary-400);
-            box-shadow: 0 0 0 0.25rem rgba(58, 117, 180, 0.15);
-            outline: none;
-        }
-
-        .search-btn {
-            position: absolute;
-            right: 0.5rem;
-            top: 50%;
-            transform: translateY(-50%);
-            background: transparent;
-            border: none;
-            color: var(--neutral-500);
-            transition: var(--transition-fast);
-        }
-
-        .search-btn:hover {
-            color: var(--primary-600);
-        }
-
         .novel-card {
-            border: none;
-            border-radius: var(--border-radius-lg);
+            width: 18rem;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
             overflow: hidden;
-            box-shadow: var(--box-shadow-md);
-            transition: var(--transition-medium);
-            height: 100%;
-            background-color: white;
         }
-
         .novel-card:hover {
-            transform: translateY(-8px);
-            box-shadow: var(--box-shadow-lg);
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
         }
-
-        .novel-image-container {
-            position: relative;
-            overflow: hidden;
-            height: 280px;
-        }
-
         .novel-image {
             width: 100%;
-            height: 100%;
+            height: 200px;
             object-fit: cover;
-            transition: var(--transition-slow);
+            transition: transform 0.3s ease;
         }
-
         .novel-card:hover .novel-image {
-            transform: scale(1.05);
+            transform: scale(1.03);
         }
-
-        .ranking-badge {
-            position: absolute;
-            top: 1rem;
-            left: 1rem;
-            width: 2.5rem;
-            height: 2.5rem;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            color: white;
-            z-index: 2;
-            box-shadow: var(--box-shadow-sm);
+        .novel-info {
+            padding: 15px;
         }
-
-        .ranking-badge.top-1 {
-            background: linear-gradient(135deg, #ffd700, #c9b037);
-            width: 3rem;
-            height: 3rem;
-            font-size: 1.25rem;
-        }
-
-        .ranking-badge.top-2 {
-            background: linear-gradient(135deg, #c0c0c0, #a1a1a1);
-            width: 2.75rem;
-            height: 2.75rem;
+        .novel-title {
+            font-weight: bold;
+            margin-bottom: 5px;
             font-size: 1.1rem;
         }
-
-        .ranking-badge.top-3 {
-            background: linear-gradient(135deg, #cd7f32, #b87333);
-            font-size: 1rem;
+        .category {
+            color: #6c757d;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
         }
-
-        .card-body {
-            padding: 1.5rem;
+        .rating {
+            margin-bottom: 10px;
         }
-
-        .card-title {
-            font-size: 1.25rem;
-            margin-bottom: 0.75rem;
-            color: var(--primary-800);
-            font-weight: 700;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-
-        .category-tag {
-            display: inline-block;
-            background-color: var(--primary-100);
-            color: var(--primary-700);
-            font-size: 0.75rem;
-            font-weight: 600;
-            padding: 0.35rem 0.75rem;
-            border-radius: var(--border-radius-xl);
-            margin-bottom: 1rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .rating-container {
+        .dropdown-actions {
             display: flex;
-            align-items: center;
-            margin-bottom: 1.25rem;
+            gap: 10px;
+            margin-top: 10px;
         }
-
-        .rating-stars {
-            color: var(--warning-500);
-            margin-right: 0.5rem;
-            font-size: 1.1rem;
+        .dropdown-actions a {
+            color: #0d6efd;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.2s ease;
         }
-
-        .rating-value {
-            font-weight: 600;
-            color: var(--neutral-700);
-            margin-right: 0.25rem;
+        .dropdown-actions a:hover {
+            color: #084298;
+            text-decoration: underline;
         }
-
-        .rating-count {
-            font-size: 0.85rem;
-            color: var(--neutral-500);
+        .library-btn {
+            margin-bottom: 10px;
+            width: 100%;
+            transition: all 0.2s ease;
         }
-
-        .card-footer {
-            background-color: white;
-            border-top: 1px solid var(--neutral-100);
-            padding: 1rem 1.5rem;
-        }
-
-        .action-btn {
-            padding: 0.5rem;
-            width: 2.5rem;
-            height: 2.5rem;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            transition: var(--transition-fast);
-        }
-
-        .action-btn:hover {
-            background-color: var(--neutral-100);
+        .library-btn:hover {
             transform: translateY(-2px);
         }
 
-        .page-header {
-            margin-bottom: 3rem;
-            padding-bottom: 1.5rem;
-            border-bottom: 1px solid var(--neutral-200);
-        }
-
-        .page-title {
-            position: relative;
-            padding-bottom: 1rem;
-            font-size: 2.25rem;
-        }
-
-        .page-title:after {
-            content: '';
-            position: absolute;
-            left: 0;
-            bottom: 0;
-            width: 80px;
-            height: 4px;
-            background: linear-gradient(90deg, var(--primary-500), var(--accent-complement));
-            border-radius: 2px;
-        }
-
-        .page-subtitle {
-            font-size: 1.1rem;
-            color: var(--neutral-600);
-            max-width: 700px;
-            margin-top: 1rem;
-        }
-
-        /* Advanced search results */
-        #searchResults {
-            position: absolute;
-            width: 100%;
-            max-height: 500px;
-            overflow-y: auto;
-            background: white;
-            border-radius: 0 0 var(--border-radius-lg) var(--border-radius-lg);
-            box-shadow: var(--box-shadow-lg);
-            z-index: 1000;
+        /* Enhanced Chat Styles */
+        #chatContainer {
             display: none;
-            margin-top: 0.5rem;
-            border: 1px solid var(--neutral-200);
-            border-top: none;
+            flex-direction: column;
+            border: 1px solid #e0e0e0;
+            width: 320px;
+            height: 450px;
+            background-color: #fff;
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            z-index: 1000;
+            overflow: hidden;
+            transition: all 0.3s ease;
         }
 
-        .search-result-item {
-            padding: 1rem 1.5rem;
-            border-bottom: 1px solid var(--neutral-100);
-            transition: var(--transition-fast);
-            display: block;
-            text-decoration: none;
-            color: inherit;
+        #chatContainer.open {
+            display: flex;
+            animation: fadeInUp 0.3s ease;
         }
 
-        .search-result-item:hover {
-            background-color: var(--neutral-50);
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
-        .search-result-highlight {
-            background-color: rgba(58, 117, 180, 0.15);
+        #chatHeader {
             font-weight: 600;
-            padding: 0 0.15rem;
-            border-radius: var(--border-radius-sm);
+            padding: 12px 15px;
+            border-bottom: 1px solid #eee;
+            font-size: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #0d6efd;
+            color: white;
         }
 
-        /* Pagination */
-        .pagination .page-item .page-link {
+        #chatHeader i {
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            padding: 5px;
+            border-radius: 50%;
+        }
+
+        #chatHeader i:hover {
+            transform: scale(1.1);
+            background-color: rgba(255,255,255,0.2);
+        }
+
+        #chatMessages {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 15px;
+            background-color: #f5f7fa;
+            font-size: 14px;
+            scroll-behavior: smooth;
+        }
+
+        .message {
+            margin-bottom: 12px;
+            padding: 10px 15px;
+            border-radius: 18px;
+            max-width: 80%;
+            word-wrap: break-word;
+            line-height: 1.4;
+        }
+
+        .user-message {
+            background-color: #0d6efd;
+            color: white;
+            margin-left: auto;
+            border-bottom-right-radius: 5px;
+        }
+
+        .ai-message {
+            background-color: #e9ecef;
+            color: #212529;
+            margin-right: auto;
+            border-bottom-left-radius: 5px;
+        }
+
+        #chatInputContainer {
+            display: flex;
+            gap: 8px;
+            padding: 12px;
+            background-color: #fff;
+            border-top: 1px solid #eee;
+        }
+
+        #chatInput {
+            flex-grow: 1;
+            padding: 10px 15px;
+            font-size: 14px;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        #chatInput:focus {
+            border-color: #0d6efd;
+            box-shadow: 0 0 0 3px rgba(13,110,253,0.25);
+        }
+
+        #chatInputContainer button {
+            padding: 10px 15px;
+            background-color: #0d6efd;
             border: none;
-            color: var(--neutral-700);
-            font-weight: 500;
-            border-radius: var(--border-radius-md);
-            margin: 0 0.25rem;
-            min-width: 2.5rem;
-            text-align: center;
-        }
-
-        .pagination .page-item.active .page-link {
-            background-color: var(--primary-600);
             color: white;
-        }
-
-        .pagination .page-item:not(.active) .page-link:hover {
-            background-color: var(--neutral-100);
-            color: var(--primary-600);
-        }
-
-        /* Footer */
-        .main-footer {
-            background-color: var(--primary-900);
-            color: white;
-            padding: 4rem 0 2rem;
-            margin-top: 5rem;
-        }
-
-        .footer-logo {
-            font-size: 1.75rem;
-            font-weight: 700;
-            margin-bottom: 1.5rem;
-            display: inline-block;
-        }
-
-        .footer-links-title {
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin-bottom: 1.5rem;
-            color: white;
-            position: relative;
-            padding-bottom: 0.75rem;
-        }
-
-        .footer-links-title:after {
-            content: '';
-            position: absolute;
-            left: 0;
-            bottom: 0;
-            width: 40px;
-            height: 2px;
-            background-color: var(--primary-400);
-        }
-
-        .footer-link {
-            display: block;
-            color: var(--neutral-300);
-            margin-bottom: 0.75rem;
-            text-decoration: none;
-            transition: var(--transition-fast);
-        }
-
-        .footer-link:hover {
-            color: white;
-            transform: translateX(4px);
-        }
-
-        .footer-bottom {
-            border-top: 1px solid rgba(255,255,255,0.1);
-            padding-top: 2rem;
-            margin-top: 3rem;
-        }
-
-        .social-link {
-            display: inline-flex;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
             align-items: center;
             justify-content: center;
-            width: 2.5rem;
-            height: 2.5rem;
+        }
+
+        #chatInputContainer button:hover {
+            background-color: #0b5ed7;
+            transform: translateY(-1px);
+        }
+
+        #chatInputContainer button:active {
+            transform: translateY(0);
+        }
+
+        #chatButton {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
             border-radius: 50%;
-            background-color: rgba(255,255,255,0.1);
+            cursor: pointer;
+            background-color: #0d6efd;
+            border: none;
             color: white;
-            transition: var(--transition-fast);
-            margin-right: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(13,110,253,0.3);
+            z-index: 1001;
+            transition: all 0.3s ease;
         }
 
-        .social-link:hover {
-            background-color: var(--primary-500);
+        #chatButton:hover {
+            background-color: #0b5ed7;
             transform: translateY(-3px);
+            box-shadow: 0 6px 16px rgba(13,110,253,0.4);
         }
 
-        /* Responsive adjustments */
-        @media (max-width: 1199.98px) {
-            .navbar-brand {
-                font-size: 1.5rem;
+        #chatButton:active {
+            transform: translateY(-1px);
+        }
+
+        #chatButton i {
+            font-size: 24px;
+        }
+
+        .typing-indicator {
+            display: flex;
+            padding: 10px 15px;
+            background-color: #e9ecef;
+            border-radius: 18px;
+            margin-bottom: 12px;
+            width: fit-content;
+            border-bottom-left-radius: 5px;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #6c757d;
+            border-radius: 50%;
+            margin: 0 2px;
+            animation: typingAnimation 1.4s infinite ease-in-out;
+        }
+
+        .typing-dot:nth-child(1) {
+            animation-delay: 0s;
+        }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typingAnimation {
+            0%, 60%, 100% {
+                transform: translateY(0);
+            }
+            30% {
+                transform: translateY(-5px);
             }
         }
 
-        @media (max-width: 991.98px) {
-            .navbar-collapse {
-                padding: 1rem 0;
-                margin-top: 1rem;
-                border-top: 1px solid var(--neutral-200);
-            }
-
-            .nav-link {
-                padding: 0.75rem 0;
-                border-radius: 0;
-                border-bottom: 1px solid var(--neutral-100);
-            }
-
-            .search-container {
-                margin: 1rem 0;
-            }
-        }
-
-        @media (max-width: 767.98px) {
-            .page-title {
-                font-size: 1.75rem;
-            }
-
-            .novel-image-container {
-                height: 220px;
-            }
-        }
-
-        /* Utility classes */
-        .text-primary-gradient {
-            background: linear-gradient(90deg, var(--primary-500), var(--accent-complement));
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .bg-light-accent {
-            background-color: rgba(58, 117, 180, 0.08);
-        }
-
-        .letter-spacing-1 {
-            letter-spacing: 0.05em;
-        }
-
-        .z-index-1 {
-            z-index: 1;
-        }
-
-        .hover-scale {
-            transition: var(--transition-medium);
-        }
-
-        .hover-scale:hover {
-            transform: scale(1.03);
+        .timestamp {
+            font-size: 11px;
+            color: #6c757d;
+            margin-top: 4px;
+            text-align: right;
         }
     </style>
 </head>
 <body>
-<!-- Navigation Bar -->
-<nav class="navbar navbar-expand-lg sticky-top">
-    <div class="container">
-        <a class="navbar-brand" href="/">
-            <i class="bi bi-book-half logo-icon"></i>
-            <span>NovelMetrics</span>
-            <span class="text-primary-gradient">Pro</span>
+
+<header class="toolbar">
+    <div>
+        <a href="/novels/new" class="btn btn-primary">
+            <i class="bi bi-plus-circle"></i> Ajouter un Roman
+        </a>
+        <a href="/" class="btn btn-secondary">
+            <i class="bi bi-house"></i> Accueil
+        </a>
+        <a href="/library" class="btn btn-info" sec:authorize="isAuthenticated()">
+            <i class="bi bi-bookmark-heart"></i> Ma Bibliothèque
+        </a>
+    </div>
+    <div class="auth-section">
+        <a href="/auth/login" class="btn btn-outline-primary" th:unless="${isAuthenticated}">
+            <i class="bi bi-box-arrow-in-right"></i> Connexion
+        </a>
+        <a href="/auth/signup" class="btn btn-outline-secondary" th:unless="${isAuthenticated}">
+            <i class="bi bi-person-plus"></i> Inscription
         </a>
 
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
-            <i class="bi bi-list"></i>
-        </button>
-
-        <div class="collapse navbar-collapse" id="navbarContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link" href="/">Accueil</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link active" href="/novels/ranking">Classement</a>
-                </li>
-
-
-            </ul>
-
-            <div class="search-container me-3">
-                <form class="position-relative" id="searchForm" role="search">
-                    <input type="search" class="form-control search-input" id="searchInput"
-                           placeholder="Rechercher des romans..."
-                           aria-label="Recherche de romans"
-                           autocomplete="off">
-                    <button class="search-btn" type="submit">
-                        <i class="bi bi-search"></i>
-                    </button>
-                </form>
-                <div id="searchResults" aria-live="polite"></div>
-            </div>
-
-            <div class="d-flex align-items-center" sec:authorize="!isAuthenticated()">
-                <a href="/auth/login" class="btn btn-outline-primary me-2">Connexion</a>
-
-            </div>
-
-            <div class="dropdown" sec:authorize="isAuthenticated()">
-                <button class="btn btn-outline-primary dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown">
-                    <i class="bi bi-person-circle me-1"></i>
-                    <span sec:authentication="name">Profil</span>
-                </button>
-                <ul class="dropdown-menu dropdown-menu-end">
-                    <li><a class="dropdown-item" href="/profile"><i class="bi bi-person me-2"></i>Mon Profil</a></li>
-                    <li><a class="dropdown-item" href="/library"><i class="bi bi-bookmark-heart me-2"></i>Ma Bibliothèque</a></li>
-                    <li><hr class="dropdown-divider"></li>
-                    <li>
-                        <form action="/logout" method="post">
-                            <button type="submit" class="dropdown-item text-danger">
-                                <i class="bi bi-box-arrow-right me-2"></i>Déconnexion
-                            </button>
-                        </form>
-                    </li>
-                </ul>
-            </div>
+        <div sec:authorize="isAuthenticated()">
+            <a href="/profile" class="btn btn-outline-success">Profil</a>
+            <form action="/logout" method="post" style="display: inline;">
+                <button type="submit" class="btn btn-outline-danger">Déconnexion</button>
+            </form>
         </div>
     </div>
-</nav>
+</header>
 
-<!-- Main Content -->
-<main class="container py-5">
-    <!-- Page Header -->
-    <div class="page-header text-center">
-        <h1 class="page-title">Classement Expert des Romans</h1>
-        <p class="page-subtitle">
-            Découvrez les œuvres littéraires les plus appréciées selon notre algorithme d'évaluation professionnelle.
-            Les classements sont mis à jour quotidiennement.
-        </p>
-    </div>
+<main class="container">
+    <h2 class="text-center mt-4 mb-4">Classement des Romans</h2>
+    <div class="novel-row">
+        <div class="novel-card" th:each="novel : ${novels}" th:attr="data-id=${novel.id}">
+            <img th:src="@{'/novels/image/' + ${novel.id}}" th:alt="${novel.name}" class="novel-image">
+            <div class="novel-info">
+                <p class="novel-title" th:text="${novel.name}">Nom du Roman</p>
+                <div class="category" th:text="${novel.category}">Catégorie</div>
 
-    <!-- Ranking Filters -->
-    <div class="row mb-4">
-        <div class="col-12">
-            <div class="card border-0 bg-light-accent">
-                <div class="card-body py-3">
-                    <div class="row align-items-center">
-                        <div class="col-md-4 mb-2 mb-md-0">
-                            <label for="categoryFilter" class="form-label fw-semibold">Filtrer par catégorie</label>
-                            <select class="form-select" id="categoryFilter">
-                                <option selected>Toutes catégories</option>
-                                <option>Fantasy</option>
-                                <option>Science-Fiction</option>
-                                <option>Romance</option>
-                                <option>Policier</option>
-                                <option>Historique</option>
-                            </select>
-                        </div>
-                        <div class="col-md-4 mb-2 mb-md-0">
-                            <label for="sortBy" class="form-label fw-semibold">Trier par</label>
-                            <select class="form-select" id="sortBy">
-                                <option selected>Note moyenne</option>
-                                <option>Nombre d'évaluations</option>
-                                <option>Date de publication</option>
-                                <option>Titre alphabétique</option>
-                            </select>
-                        </div>
-                        <div class="col-md-4">
-                            <label for="timePeriod" class="form-label fw-semibold">Période</label>
-                            <select class="form-select" id="timePeriod">
-                                <option selected>Tous les temps</option>
-                                <option>Cette année</option>
-                                <option>Ce trimestre</option>
-                                <option>Ce mois</option>
-                            </select>
-                        </div>
-                    </div>
+                <!-- Add to Library Button (only shown if authenticated) -->
+                <div sec:authorize="isAuthenticated()">
+                    <form th:action="@{'/library/add/' + ${novel.id}}" method="post">
+                        <button type="submit" class="btn btn-outline-primary library-btn">
+                            <i class="bi bi-bookmark-plus"></i>
+                        </button>
+                    </form>
+                </div>
+
+                <div class="rating text-danger">
+                    <i class="bi bi-star-fill"></i> <span th:text="${novel.averageRatingRounded}">4.5</span>
+                </div>
+                <div class="dropdown-actions">
+                    <a th:href="@{'/novels/detail/' + ${novel.id}}">
+                        <i class="bi bi-info-circle"></i> Détails
+                    </a>
+                    <a th:href="@{'/novels/edit/' + ${novel.id}}" th:if="${isAuthenticated}">
+                        <i class="bi bi-pencil"></i> Modifier
+                    </a>
+                    <a th:href="@{'/novels/delete/' + ${novel.id}}"
+                       th:if="${isAuthenticated}"
+                       onclick="return confirm('Êtes-vous sûr ?')">
+                        <i class="bi bi-trash"></i> Supprimer
+                    </a>
                 </div>
             </div>
         </div>
     </div>
-
-    <!-- Novels Grid -->
-    <div class="row g-4" id="novelsContainer">
-        <div class="col-12 col-md-6 col-lg-4 col-xl-3" th:each="novel,iter : ${novels}" data-aos="fade-up">
-            <div class="novel-card h-100" th:attr="data-id=${novel.id}">
-                <!-- Ranking Badge -->
-                <div th:classappend="${iter.index < 3} ? 'ranking-badge top-${iter.index + 1}' : 'ranking-badge'"
-                     th:text="${iter.index + 1}">1</div>
-
-                <!-- Novel Cover Image -->
-                <div class="novel-image-container">
-                    <img th:src="@{'/novels/image/' + ${novel.id}}"
-                         th:alt="${novel.name}"
-                         class="novel-image">
-                </div>
-
-                <!-- Card Body -->
-                <div class="card-body">
-                    <!-- Title -->
-                    <h5 class="card-title" th:text="${novel.name}">Titre du Roman</h5>
-
-                    <!-- Category -->
-                    <span class="category-tag" th:text="${novel.category}">Catégorie</span>
-
-                    <!-- Rating -->
-                    <div class="rating-container">
-                        <div class="rating-stars">
-                            <i class="bi bi-star-fill"></i>
-                            <i class="bi bi-star-fill"></i>
-                            <i class="bi bi-star-fill"></i>
-                            <i class="bi bi-star-fill"></i>
-                            <i class="bi bi-star-half"></i>
-                        </div>
-                        <div>
-                            <span class="rating-value" th:text="${novel.averageRatingRounded}">4.5</span>
-                            <span class="rating-count" th:text="'(' + ${novel.ratingCount} + ')'">(128)</span>
-                        </div>
-                    </div>
-
-                    <!-- Add to Library Button -->
-                    <div sec:authorize="isAuthenticated()" class="mb-3">
-                        <form th:action="@{'/library/add/' + ${novel.id}}" method="post">
-                            <button type="submit" class="btn btn-outline-primary w-100">
-                                <i class="bi bi-bookmark-plus me-1"></i> Ajouter
-                            </button>
-                        </form>
-                    </div>
-                </div>
-
-                <!-- Card Footer -->
-                <div class="card-footer bg-transparent">
-                    <div class="d-flex justify-content-between">
-                        <a th:href="@{'/novels/detail/' + ${novel.id}}" class="action-btn text-primary" title="Détails">
-                            <i class="bi bi-info-circle"></i>
-                        </a>
-                        <a th:href="@{'/novels/edit/' + ${novel.id}}"
-                           th:if="${isAuthenticated}"
-                           class="action-btn text-warning" title="Modifier">
-                            <i class="bi bi-pencil"></i>
-                        </a>
-                        <a th:href="@{'/novels/delete/' + ${novel.id}}"
-                           th:if="${isAuthenticated}"
-                           class="action-btn text-danger"
-                           title="Supprimer"
-                           onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce roman ?')">
-                            <i class="bi bi-trash"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Pagination -->
-    <nav aria-label="Pagination" class="mt-5" th:if="${totalPages > 1}">
-        <ul class="pagination justify-content-center">
-            <li class="page-item" th:classappend="${currentPage == 1} ? 'disabled'">
-                <a class="page-link" th:href="@{/novels/ranking(page=1)}" aria-label="Première page">
-                    <i class="bi bi-chevron-double-left"></i>
-                </a>
-            </li>
-            <li class="page-item" th:classappend="${currentPage == 1} ? 'disabled'">
-                <a class="page-link" th:href="@{/novels/ranking(page=${currentPage-1})}" aria-label="Page précédente">
-                    <i class="bi bi-chevron-left"></i>
-                </a>
-            </li>
-
-            <li class="page-item" th:each="page : ${#numbers.sequence(max(1, min(currentPage-2, totalPages-4)), min(totalPages, max(5, currentPage+2)))}"
-                th:classappend="${page == currentPage} ? 'active'">
-                <a class="page-link" th:href="@{/novels/ranking(page=${page})}" th:text="${page}">1</a>
-            </li>
-
-            <li class="page-item" th:classappend="${currentPage == totalPages} ? 'disabled'">
-                <a class="page-link" th:href="@{/novels/ranking(page=${currentPage+1})}" aria-label="Page suivante">
-                    <i class="bi bi-chevron-right"></i>
-                </a>
-            </li>
-            <li class="page-item" th:classappend="${currentPage == totalPages} ? 'disabled'">
-                <a class="page-link" th:href="@{/novels/ranking(page=${totalPages})}" aria-label="Dernière page">
-                    <i class="bi bi-chevron-double-right"></i>
-                </a>
-            </li>
-        </ul>
-    </nav>
 </main>
 
-<!-- Footer -->
-<footer class="main-footer">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-4 mb-5 mb-lg-0">
-                <a href="/" class="footer-logo d-flex align-items-center">
-                    <i class="bi bi-book-half me-2"></i>
-                    <span>NovelMetrics</span>
-                </a>
-                <p class="text-muted">
-                    Plateforme professionnelle d'évaluation et de classement d'œuvres littéraires.
-                    Notre algorithme expert garantit des résultats précis et impartiaux.
-                </p>
-                <div class="mt-4">
-                    <a href="#" class="social-link"><i class="bi bi-facebook"></i></a>
-                    <a href="#" class="social-link"><i class="bi bi-twitter"></i></a>
-                    <a href="#" class="social-link"><i class="bi bi-linkedin"></i></a>
-                    <a href="#" class="social-link"><i class="bi bi-instagram"></i></a>
-                </div>
-            </div>
-            <div class="col-lg-2 col-md-4 mb-4 mb-md-0">
-                <h5 class="footer-links-title">Navigation</h5>
-                <a href="/" class="footer-link">Accueil</a>
-                <a href="/novels/ranking" class="footer-link">Classement</a>
-                <a href="/novels/new" class="footer-link">Ajouter un roman</a>
-                <a href="/library" class="footer-link">Ma bibliothèque</a>
-            </div>
-            <div class="col-lg-2 col-md-4 mb-4 mb-md-0">
-                <h5 class="footer-links-title">Catégories</h5>
-                <a href="#" class="footer-link">Fantasy</a>
-                <a href="#" class="footer-link">Science-Fiction</a>
-                <a href="#" class="footer-link">Romance</a>
-                <a href="#" class="footer-link">Policier</a>
-            </div>
-            <div class="col-lg-2 col-md-4 mb-4 mb-md-0">
-                <h5 class="footer-links-title">Ressources</h5>
-                <a href="#" class="footer-link">Blog</a>
-                <a href="#" class="footer-link">FAQ</a>
-                <a href="#" class="footer-link">Méthodologie</a>
-                <a href="#" class="footer-link">API</a>
-            </div>
-            <div class="col-lg-2 col-md-4">
-                <h5 class="footer-links-title">Légal</h5>
-                <a href="#" class="footer-link">Conditions d'utilisation</a>
-                <a href="#" class="footer-link">Politique de confidentialité</a>
-                <a href="#" class="footer-link">Mentions légales</a>
-                <a href="#" class="footer-link">CGU</a>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <div class="row align-items-center">
-                <div class="col-md-6 mb-3 mb-md-0">
-                    <p class="mb-0 text-muted small">&copy; 2023 NovelMetrics Pro. Tous droits réservés.</p>
-                </div>
-                <div class="col-md-6 text-md-end">
-                    <a href="#" class="text-muted small me-3">Politique de cookies</a>
-                    <a href="#" class="text-muted small">Préférences</a>
-                </div>
-            </div>
+<!-- Floating Chat AI Button -->
+<div id="chatButton" title="Chat AI">
+    <i class="bi bi-chat-dots-fill"></i>
+</div>
+
+<!-- Chat AI Container -->
+<div id="chatContainer">
+    <div id="chatHeader">
+        <span>Chat AI</span>
+        <i class="bi bi-x-lg"></i>
+    </div>
+    <div id="chatMessages">
+        <div class="ai-message message">
+            Bonjour ! Je suis votre assistant littéraire. Comment puis-je vous aider aujourd'hui ?
+            <div class="timestamp">juste maintenant</div>
         </div>
     </div>
-</footer>
+    <div id="chatInputContainer">
+        <input type="text" id="chatInput" placeholder="Écrivez un message..." autocomplete="off">
+        <button onclick="sendMessage()">
+            <i class="bi bi-send-fill"></i>
+        </button>
+    </div>
+</div>
 
 <!-- Bootstrap JS Bundle with Popper -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-
-<!-- AOS Animation -->
-<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
-    // Initialize AOS animation
-    AOS.init({
-        duration: 600,
-        once: true,
-        offset: 100
-    });
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize chat functionality
+        initializeChat();
 
-    document.addEventListener('DOMContentLoaded', () => {
-        // Search functionality
-        const searchInput = document.getElementById('searchInput');
-        const searchResults = document.getElementById('searchResults');
-        const searchForm = document.getElementById('searchForm');
-
-        // State
-        let currentSearchQuery = '';
-        let abortController = null;
-        let activeResultIndex = -1;
-        const MIN_SEARCH_LENGTH = 2;
-        const SEARCH_DELAY = 300;
-
-        // Utility functions
-        const debounce = (fn, delay) => {
-            let timeoutId;
-            return (...args) => {
-                clearTimeout(timeoutId);
-                timeoutId = setTimeout(() => fn(...args), delay);
-            };
-        };
-
-        const escapeHtml = (text) => {
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
-        };
-
-        const highlightMatches = (text, query) => {
-            if (!query) return escapeHtml(text);
-            const regex = new RegExp(`(${escapeHtml(query)})`, 'gi');
-            return escapeHtml(text).replace(regex, '<span class="search-result-highlight">$1</span>');
-        };
-
-        // Search functions
-        const fetchSearchResults = async (query) => {
-            if (!query || query.length < MIN_SEARCH_LENGTH) {
-                return [];
-            }
-
-            // Cancel previous request if still pending
-            if (abortController) {
-                abortController.abort();
-            }
-
-            abortController = new AbortController();
-
-            try {
-                const response = await fetch(`/novels/search?query=${encodeURIComponent(query)}`, {
-                    signal: abortController.signal
-                });
-
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-
-                return await response.json();
-            } catch (error) {
-                if (error.name !== 'AbortError') {
-                    console.error('Search error:', error);
-                }
-                return [];
-            }
-        };
-
-        const renderSearchResults = (results, query) => {
-            if (!results || results.length === 0) {
-                searchResults.innerHTML = `
-                        <div class="p-3 text-muted text-center">
-                            Aucun résultat trouvé pour "${escapeHtml(query)}"
-                        </div>
-                    `;
-                searchResults.style.display = 'block';
-                return;
-            }
-
-            searchResults.innerHTML = `
-                    <div class="list-group list-group-flush">
-                        ${results.map(novel => `
-                            <a href="/novels/detail/${novel.id}"
-                               class="list-group-item list-group-item-action search-result-item">
-                                <div class="d-flex align-items-center">
-                                    <div class="flex-shrink-0 me-3">
-                                        <img src="/novels/image/${novel.id}"
-                                             alt="${novel.name}"
-                                             class="rounded" width="40" height="60" style="object-fit: cover;">
-                                    </div>
-                                    <div class="flex-grow-1">
-                                        <div class="d-flex justify-content-between align-items-center">
-                                            <h6 class="mb-1 fw-semibold">
-                                                ${highlightMatches(novel.name, query)}
-                                            </h6>
-                                            <small class="text-warning">
-                                                <i class="bi bi-star-fill"></i>
-                                                ${novel.averageRatingRounded || 'N/A'}
-                                            </small>
-                                        </div>
-                                        <small class="text-muted">
-                                            ${highlightMatches(novel.category, query)}
-                                        </small>
-                                    </div>
-                                </div>
-                            </a>
-                        `).join('')}
-                    </div>
-                `;
-
-            searchResults.style.display = 'block';
-        };
-
-        const handleSearch = debounce(async (query) => {
-            currentSearchQuery = query;
-
-            if (!query || query.length < MIN_SEARCH_LENGTH) {
-                searchResults.style.display = 'none';
-                return;
-            }
-
-            const results = await fetchSearchResults(query);
-
-            // Only show results if query hasn't changed
-            if (currentSearchQuery === query) {
-                renderSearchResults(results, query);
-            }
-        }, SEARCH_DELAY);
-
-        // Event handlers
-        const handleInput = (e) => {
-            const query = e.target.value.trim();
-            activeResultIndex = -1;
-            handleSearch(query);
-        };
-
-        const handleSubmit = (e) => {
-            e.preventDefault();
-            const query = searchInput.value.trim();
-
-            if (query) {
-                window.location.href = `/novels/search-page?query=${encodeURIComponent(query)}`;
-            }
-        };
-
-        const handleDocumentClick = (e) => {
-            if (!e.target.closest('.search-container')) {
-                searchResults.style.display = 'none';
-            }
-        };
-
-        const handleSearchInputClick = () => {
-            if (searchResults.innerHTML && currentSearchQuery) {
-                searchResults.style.display = 'block';
-            }
-        };
-
-        const handleKeyDown = (e) => {
-            const items = searchResults.querySelectorAll('.search-result-item');
-
-            if (!items.length) return;
-
-            switch (e.key) {
-                case 'ArrowDown':
-                    e.preventDefault();
-                    activeResultIndex = (activeResultIndex + 1) % items.length;
-                    items[activeResultIndex].classList.add('active');
-                    items[activeResultIndex].focus();
-                    break;
-
-                case 'ArrowUp':
-                    e.preventDefault();
-                    activeResultIndex = (activeResultIndex - 1 + items.length) % items.length;
-                    items[activeResultIndex].classList.add('active');
-                    items[activeResultIndex].focus();
-                    break;
-
-                case 'Enter':
-                    if (activeResultIndex >= 0) {
-                        e.preventDefault();
-                        window.location.href = items[activeResultIndex].getAttribute('href');
-                    }
-                    break;
-
-                case 'Escape':
-                    searchResults.style.display = 'none';
-                    break;
-            }
-
-            // Remove active class from other items
-            items.forEach((item, index) => {
-                if (index !== activeResultIndex) {
-                    item.classList.remove('active');
+        // Highlight novel card on click
+        document.querySelectorAll('.novel-card').forEach(card => {
+            card.addEventListener('click', e => {
+                if (e.target.tagName !== 'A') {
+                    document.querySelectorAll('.novel-card').forEach(c => c.classList.remove('active'));
+                    card.classList.add('active');
                 }
             });
-        };
+        });
 
-        // Event listeners
-        searchInput.addEventListener('input', handleInput);
-        searchForm.addEventListener('submit', handleSubmit);
-        document.addEventListener('click', handleDocumentClick);
-        searchInput.addEventListener('click', handleSearchInputClick);
-        searchInput.addEventListener('keydown', handleKeyDown);
-
-        // Initialize tooltips
-        const tooltipTriggerList = [].slice.call(document.querySelectorAll('[title]'));
-        tooltipTriggerList.map(function (tooltipTriggerEl) {
-            return new bootstrap.Tooltip(tooltipTriggerEl);
+        // Remove highlight when clicking outside
+        document.addEventListener('click', e => {
+            if (!e.target.closest('.novel-card')) {
+                document.querySelectorAll('.novel-card').forEach(c => c.classList.remove('active'));
+            }
         });
     });
+
+    function initializeChat() {
+        const chatButton = document.getElementById('chatButton');
+        const chatContainer = document.getElementById('chatContainer');
+
+        if (!chatButton || !chatContainer) {
+            console.error('Chat elements not found');
+            return;
+        }
+
+        const chatHeader = document.getElementById('chatHeader');
+        const closeIcon = chatHeader.querySelector('i.bi-x-lg');
+        const chatMessages = document.getElementById('chatMessages');
+        const chatInput = document.getElementById('chatInput');
+        let isAIResponding = false;
+
+        // Toggle chat container when clicking the chat button
+        chatButton.addEventListener('click', function(e) {
+            e.stopPropagation();
+            toggleChat();
+        });
+
+        // Close chat when clicking on the close icon in header
+        closeIcon.addEventListener('click', function(e) {
+            e.stopPropagation();
+            closeChat();
+        });
+
+        // Close chat when clicking anywhere outside
+        document.addEventListener('click', function(e) {
+            if (!chatContainer.contains(e.target) && e.target !== chatButton) {
+                closeChat();
+            }
+        });
+
+        // Allow sending message with Enter key
+        chatInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        function toggleChat() {
+            chatContainer.classList.toggle('open');
+            if (chatContainer.classList.contains('open')) {
+                chatInput.focus();
+            }
+        }
+
+        function closeChat() {
+            chatContainer.classList.remove('open');
+        }
+
+        function showTypingIndicator() {
+            if (isAIResponding) return;
+
+            isAIResponding = true;
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'typing-indicator';
+            typingDiv.innerHTML = `
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+            `;
+            chatMessages.appendChild(typingDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function hideTypingIndicator() {
+            const typingIndicator = document.querySelector('.typing-indicator');
+            if (typingIndicator) {
+                typingIndicator.remove();
+            }
+            isAIResponding = false;
+        }
+
+        function addMessage(text, isUser) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${isUser ? 'user-message' : 'ai-message'}`;
+
+            const now = new Date();
+            const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+            messageDiv.innerHTML = `
+                ${text}
+                <div class="timestamp">${timeString}</div>
+            `;
+
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        window.sendMessage = async function() {
+            const message = chatInput.value.trim();
+            if (message === '') return;
+
+            // Add user message to chat
+            addMessage(message, true);
+            chatInput.value = '';
+
+            showTypingIndicator();
+
+            try {
+                const response = await fetch('/api/ai/generate', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('jwtToken') || ''}`
+                    },
+                    body: JSON.stringify({ prompt: message })
+                });
+
+                const data = await response.json();
+                hideTypingIndicator();
+
+                if (!response.ok) {
+                    addMessage(data.response || "Sorry, an error occurred", false);
+                    if (data.response && data.response.includes("log in")) {
+                        showLoginPrompt();
+                    }
+                    return;
+                }
+
+                // Add AI response
+                addMessage(data.response, false);
+
+                // Check if user asked for recommendations
+                const recommendationKeywords = ['recommend', 'suggest', 'what should i read', 'what to read', 'i want to read', 'recommendation'];
+                const askedForRecommendation = recommendationKeywords.some(keyword =>
+                    message.toLowerCase().includes(keyword.toLowerCase())
+                );
+
+                if (askedForRecommendation) {
+                    // Create and append recommendation button
+                    const recommendationDiv = document.createElement('div');
+                    recommendationDiv.className = 'message ai-message';
+                    recommendationDiv.innerHTML = `
+                        <button class="recommendation-btn btn btn-link p-0" style="color: #0d6efd; text-decoration: underline; cursor: pointer;">
+                            🎯 Voir les recommandations
+                        </button>
+                        <div class="timestamp">${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
+                    `;
+                    chatMessages.appendChild(recommendationDiv);
+
+                    // Add event listener to the new button
+                    recommendationDiv.querySelector('.recommendation-btn').addEventListener('click', function() {
+                        window.location.href = '/recommendation';
+                    });
+                }
+
+                // Handle recommendations if present
+                if (data.recommendations && data.recommendations.length > 0) {
+                    setTimeout(() => {
+                        showRecommendedNovels(data.recommendations);
+                    }, 500);
+                }
+
+            } catch (error) {
+                hideTypingIndicator();
+                addMessage("Sorry, an error occurred. Please try again.", false);
+                console.error('Error:', error);
+            }
+        };
+
+        function showRecommendedNovels(novelIds) {
+            // Create a container for recommendations
+            const recContainer = document.createElement('div');
+            recContainer.className = 'recommendations-container mt-3';
+            recContainer.innerHTML = `
+                <div class="recommendations-header mb-2">
+                    <strong>Recommended for you:</strong>
+                </div>
+                <div class="recommendations-list"></div>
+            `;
+
+            const recList = recContainer.querySelector('.recommendations-list');
+
+            // Fetch novel details from the page (since we're using Thymeleaf)
+            novelIds.forEach(novelId => {
+                const novelCard = document.querySelector(`.novel-card[data-id="${novelId}"]`);
+                if (novelCard) {
+                    const novelName = novelCard.querySelector('.novel-title').textContent;
+                    const novelCategory = novelCard.querySelector('.category').textContent;
+                    const novelImage = novelCard.querySelector('.novel-image').src;
+
+                    const novelElement = document.createElement('div');
+                    novelElement.className = 'recommended-novel mb-2 p-2 border rounded';
+                    novelElement.innerHTML = `
+                        <div class="d-flex align-items-center gap-2">
+                            <img src="${novelImage}" alt="${novelName}"
+                                 class="rounded" width="40" height="60" style="object-fit: cover;">
+                            <div>
+                                <strong>${novelName}</strong>
+                                <div class="text-muted small">${novelCategory}</div>
+                            </div>
+                        </div>
+                        <a href="/novels/detail/${novelId}" class="btn btn-sm btn-outline-primary mt-2 w-100">
+                            View Details
+                        </a>
+                    `;
+                    recList.appendChild(novelElement);
+                }
+            });
+
+            // Add to chat
+            chatMessages.appendChild(recContainer);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function showLoginPrompt() {
+            const loginPrompt = document.createElement('div');
+            loginPrompt.className = 'message ai-message';
+            loginPrompt.innerHTML = `
+                To get personalized recommendations, please log in or create an account.
+                <div class="d-flex gap-2 mt-2">
+                    <a href="/auth/login" class="btn btn-sm btn-primary">Login</a>
+                    <a href="/auth/signup" class="btn btn-sm btn-secondary">Sign Up</a>
+                </div>
+                <div class="timestamp">${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
+            `;
+            chatMessages.appendChild(loginPrompt);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+    }
 </script>
+
 </body>
 </html>

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Recommended Novels</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            padding-top: 20px;
+        }
+
+        .novel-card {
+            width: 18rem;
+            border-radius: 10px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            background-color: #ffffff;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+        }
+
+        .novel-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+        }
+
+        .novel-image {
+            height: 250px;
+            object-fit: cover;
+            width: 100%;
+        }
+
+        .novel-info {
+            padding: 15px;
+        }
+
+        .novel-title a {
+            text-decoration: none;
+            color: #0d6efd;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .novel-title a:hover {
+            text-decoration: underline;
+        }
+
+        .tag-list {
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2 class="text-center mb-4">📚 Recommended Novels</h2>
+
+    <!-- Message if no recommendations -->
+    <div th:if="${#lists.isEmpty(recommended)}" class="alert alert-warning text-center">
+        No recommendations available yet. Try reading more novels!
+    </div>
+
+    <div class="row justify-content-center g-4">
+        <!-- Loop over recommended novels -->
+        <div th:each="novel : ${recommended}" class="col-md-4 col-sm-6 d-flex justify-content-center">
+            <div class="novel-card">
+                <img th:if="${novel.imageData != null}" th:src="@{'/novels/image/' + ${novel.id}}" alt="Novel Image" class="novel-image"/>
+                <img th:if="${novel.imageData == null}" src="/images/default-cover.jpg" alt="Default Image" class="novel-image"/>
+
+                <div class="novel-info">
+                    <div class="novel-title">
+                        <a th:href="@{/novels/detail/{id}(id=${novel.id})}" th:text="${novel.name}">Novel Name</a>
+
+                    </div>
+                    <div><strong>Author:</strong> <span th:text="${novel.authorName}">Author</span></div>
+                    <div><strong>Category:</strong> <span th:text="${novel.category}">Category</span></div>
+                    <div class="tag-list">
+                        <strong>Tags:</strong> <span th:text="${#strings.listJoin(novel.tags, ', ')}">Tags</span>
+                    </div>
+                    <div><strong>Rating:</strong> <span th:text="${novel.averageRating}">Rating</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap JS (optional) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

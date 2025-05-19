@@ -23,6 +23,9 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.TextCriteria;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -184,4 +187,48 @@ public class NovelService {
         logger.info("Found novels: {}", novels);
         return novels;
     }
+    public void processNovelView(User user, Novel novel) {
+        user.addViewedNovel(novel.getId());
+
+        // Update category (string key)
+        user.updateCategoryPreference(novel.getCategory().name(), 1);
+
+        // Update tags (using NovelTag enum directly)
+        for (NovelTag tag : novel.getTags()) {
+            user.updateTagPreference(tag, 1);
+        }
+
+        userRepository.save(user);
+    }
+
+    public List<Novel> getRecommendationsForUser(User user) {
+        Map<NovelTag, Integer> tagPrefs = user.getTagPreferences();
+        Map<String, Integer> categoryPrefs = user.getCategoryPreferences();
+
+        List<Novel> allNovels = novelRepository.findAll(); // or optimize with filtering
+        Map<Novel, Integer> scoreMap = new HashMap<>();
+
+        for (Novel novel : allNovels) {
+            int score = 0;
+
+            // Score by category (string keys)
+            score += categoryPrefs.getOrDefault(novel.getCategory().name(), 0);
+
+            // Score by tags (using NovelTag enum keys)
+            for (NovelTag tag : novel.getTags()) {
+                score += tagPrefs.getOrDefault(tag, 0);
+            }
+
+            scoreMap.put(novel, score);
+        }
+
+        return scoreMap.entrySet().stream()
+                .sorted(Map.Entry.<Novel, Integer>comparingByValue().reversed())
+                .map(Map.Entry::getKey)
+                .filter(novel -> !user.getViewedNovels().contains(novel.getId()))
+                .limit(3)
+                .toList();
+    }
+
+
 }

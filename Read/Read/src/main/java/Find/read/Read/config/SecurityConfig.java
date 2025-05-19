@@ -13,9 +13,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 public class SecurityConfig {
 
-
     @Autowired
     private JwtAuthenticationFilter jwtAuthenticationFilter;
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -26,23 +26,35 @@ public class SecurityConfig {
         http
                 .csrf().disable()
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(
-                                "/auth/**",
-                                "/static/**",
-                                "/images/**",
-                                "/error",
-                                "/novels",
-                                "/novels/**"
-                        ).permitAll()
+                        // Publicly accessible:
+                                .requestMatchers(
+                                        "/auth/**",
+                                        "/static/**",
+                                        "/images/**",
+                                        "/error",
+                                        "/novels",
+                                        "/novels/search-page",
+                                        "/novels/detail/**",
+                                        "/novels/image/**",
+                                        "/novels/ranking"
+                                ).permitAll()
+                                  // Protected AI generation endpoint:
+                                .requestMatchers("/api/ai/generate").authenticated()
+
+
+
+                        // Any other AI endpoints (if you really want them open)
+                        // can be listed here explicitly, e.g.:
+                        // .requestMatchers("/api/ai/help", "/api/ai/status").permitAll()
+
+                        // All other requests require authentication:
                         .anyRequest().authenticated()
                 )
                 .logout(logout -> logout
                         .logoutSuccessUrl("/novels")
-                        .logoutSuccessUrl("/auth/login")
                         .invalidateHttpSession(true)
                         .deleteCookies("JSESSIONID", "jwtToken")
                 )
-                // Remove STATELESS policy to enable sessions
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
                 )
@@ -50,7 +62,4 @@ public class SecurityConfig {
 
         return http.build();
     }
-
-
 }
-

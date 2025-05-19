@@ -14,4 +14,5 @@ public interface PageRepository extends MongoRepository<Page, String> {
     List<Page> findByNovelId(String novelId);
     // Add any other necessary custom queries if needed
 
+
 }

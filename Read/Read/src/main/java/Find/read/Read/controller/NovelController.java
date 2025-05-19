@@ -6,7 +6,6 @@ import Find.read.Read.models.Comment;
 import Find.read.Read.models.Novel;
 import Find.read.Read.models.Rating;
 import Find.read.Read.repository.CommentRepository;
-import Find.read.Read.repository.NovelRepository;
 import Find.read.Read.repository.RatingRepository;
 import Find.read.Read.service.CommentService;
 import Find.read.Read.service.NovelService;
@@ -33,12 +32,12 @@ public class NovelController {
     private CommentRepository commentRepository;
     @Autowired
     private RatingRepository ratingRepository;
-    private final NovelRepository novelRepository;
+
     private final NovelService novelService;
 
     @Autowired
-    public NovelController(NovelRepository novelRepository, NovelService novelService ) {
-        this.novelRepository = novelRepository;
+    public NovelController( NovelService novelService ) {
+
         this.novelService = novelService;
 
     }
@@ -347,4 +346,9 @@ public class NovelController {
         model.addAttribute("novels", userNovels);
         return "novel/my-novels";
     }
+
+
+
+
+
 }
