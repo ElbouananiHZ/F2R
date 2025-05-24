@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>My Stories</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .novel-card {
+            transition: transform 0.3s;
+            margin-bottom: 20px;
+        }
+        .novel-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .novel-image {
+            height: 200px;
+            object-fit: cover;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+<div class="container mt-4">
+    <h1>My Stories</h1>
+
+    <!-- Debug information (you can remove this later) -->
+    <div th:if="${novels == null}" class="alert alert-danger">
+        ERROR: Novels attribute is NULL
+    </div>
+
+    <div th:if="${novels != null and novels.empty}" class="alert alert-info">
+        You haven't created any stories yet.
+        <a th:href="@{/novels/new}" class="alert-link">Create your first story</a>
+    </div>
+
+    <div class="row" th:if="${novels != null and !novels.empty}">
+        <div class="col-md-4" th:each="novel : ${novels}">
+            <div class="card novel-card">
+                <!-- Novel Image -->
+                <img th:if="${novel.imageData != null}"
+                     th:src="@{'/novels/image/' + ${novel.id}}"
+                     class="card-img-top novel-image"
+                     alt="Novel cover">
+
+                <!-- Fallback if no image -->
+                <div th:unless="${novel.imageData != null}" class="novel-image bg-secondary d-flex align-items-center justify-content-center">
+                    <span class="text-white">No Image</span>
+                </div>
+
+                <div class="card-body">
+                    <h5 class="card-title" th:text="${novel.name}"></h5>
+                    <p class="card-text" th:text="${novel.summary}"></p>
+                    <div class="d-flex justify-content-between">
+                        <a th:href="@{'/novels/detail/' + ${novel.id}}" class="btn btn-primary">View</a>
+                        <a th:href="@{'/novels/edit/' + ${novel.id}}" class="btn btn-secondary">Edit</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -53,6 +53,15 @@ public class PageController {
         Novel novel = novelService.getNovelById(novelId)
                 .orElseThrow(() -> new RuntimeException("Novel not found"));
 
+        // Add the current logged-in user to the model
+        try {
+            User currentUser = getLoggedInUser();
+            model.addAttribute("currentUser", currentUser);
+        } catch (RuntimeException e) {
+            // User not logged in or not found - that's fine, buttons won't show
+        }
+
+        pageService.incrementPageView(novelId, pageNumber);
         Page currentPage = novel.getPages().stream()
                 .filter(p -> p.getPageNumber() == pageNumber)
                 .findFirst()
@@ -60,6 +69,7 @@ public class PageController {
 
         model.addAttribute("novel", novel);
         model.addAttribute("page", currentPage);
+        model.addAttribute("viewCount", currentPage.getViewCount());
         model.addAttribute("totalPages", novel.getPages().size());
 
         int nextPageNum = pageNumber + 1;
@@ -75,10 +85,9 @@ public class PageController {
 
         model.addAttribute("nextPage", nextPage.orElse(null));
         model.addAttribute("previousPage", previousPage.orElse(null));
-
+        model.addAttribute("viewCount", currentPage.getViewCount());
         return "page-reader";
     }
-
     @GetMapping("/new")
     public String showAddPageForm(@PathVariable String novelId, Model model) {
         Novel novel = novelService.getNovelById(novelId)

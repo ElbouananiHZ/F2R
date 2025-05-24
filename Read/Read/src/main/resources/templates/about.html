@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>À propos - Find2Read</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4e73df;
+            --primary-dark: #2e59d9;
+            --primary-light: #e6eaf7;
+            --secondary-color: #f8f9fc;
+            --accent-color: #ff6b6b;
+            --dark-color: #2c3e50;
+            --light-color: #f8f9fa;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--light-color);
+            min-height: 100vh;
+            color: var(--dark-color);
+        }
+
+        .navbar-brand {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            font-size: 1.8rem;
+            color: var(--primary-color) !important;
+            letter-spacing: -0.5px;
+        }
+
+        .about-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            padding: 5rem 0;
+            margin-bottom: 3rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .about-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path fill="rgba(255,255,255,0.05)" d="M0,0 L100,0 L100,100 L0,100 Z" /></svg>');
+            opacity: 0.1;
+        }
+
+        .about-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.8rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .about-section {
+            background-color: white;
+            border-radius: 15px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease;
+        }
+
+        .about-section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+        }
+
+        .team-member {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .team-member:hover {
+            background-color: var(--primary-light);
+            border-radius: 10px;
+        }
+
+        .team-member img {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 5px solid var(--secondary-color);
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .team-member:hover img {
+            transform: scale(1.05);
+            border-color: var(--primary-color);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            transition: transform 0.3s ease;
+        }
+
+        .feature-box:hover .feature-icon {
+            transform: scale(1.1);
+            color: var(--primary-dark);
+        }
+
+        footer {
+            background-color: var(--dark-color);
+            color: white;
+            padding: 3rem 0;
+            margin-top: 4rem;
+        }
+
+        .social-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgba(255,255,255,0.1);
+            color: white;
+            margin: 0 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .social-link:hover {
+            background-color: var(--primary-color);
+            transform: translateY(-3px);
+            color: white;
+            text-decoration: none;
+        }
+
+        /* Offcanvas menu styles */
+        .offcanvas-header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1.5rem;
+        }
+
+        .offcanvas-title {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            font-size: 1.5rem;
+        }
+
+        .offcanvas-body {
+            padding: 0;
+        }
+
+        .menu-item {
+            padding: 1.2rem 1.8rem;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: var(--dark-color);
+            font-weight: 500;
+        }
+
+        .menu-item:hover {
+            background-color: var(--primary-light);
+            text-decoration: none;
+            color: var(--primary-dark);
+            transform: translateX(5px);
+        }
+
+        .menu-item i {
+            width: 24px;
+            text-align: center;
+            font-size: 1.2rem;
+        }
+
+        @media (max-width: 768px) {
+            .about-title {
+                font-size: 2.2rem;
+            }
+
+            .about-header {
+                padding: 3rem 0;
+            }
+        }
+    </style>
+</head>
+<body>
+<!-- Navigation Bar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm py-3">
+    <div class="container">
+        <a class="navbar-brand" href="/">Find2Read</a>
+        <button class="btn btn-outline-primary ms-auto d-flex align-items-center" type="button" data-bs-toggle="offcanvas" data-bs-target="#mainMenu">
+            <i class="bi bi-list me-1"></i> Menu
+        </button>
+    </div>
+</nav>
+
+<!-- About Header -->
+<section class="about-header">
+    <div class="container">
+        <h1 class="about-title">À propos de Find2Read</h1>
+        <p class="lead fs-4">Découvrez notre passion pour la littérature et notre engagement envers les lecteurs</p>
+    </div>
+</section>
+
+<!-- Main Content -->
+<main class="container mb-5">
+    <!-- Our Story Section -->
+    <section class="about-section">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h2 class="mb-4">Notre Histoire</h2>
+                <p class="lead">Find2Read est né de la passion partagée pour la lecture et le désir de créer une communauté où les amateurs de romans peuvent découvrir, partager et discuter de leurs œuvres préférées.</p>
+                <p>Fondé en 2023, notre plateforme a rapidement évolué pour devenir un espace incontournable pour les lecteurs francophones, offrant une expérience unique de découverte littéraire.</p>
+                <p>Nous croyons que chaque livre a son lecteur, et chaque lecteur mérite de trouver le livre qui lui correspond.</p>
+            </div>
+            <div class="col-lg-6 text-center mt-4 mt-lg-0">
+                <img src="https://images.unsplash.com/photo-1544947950-fa07a98d237f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80"
+                     alt="Des livres empilés"
+                     class="img-fluid rounded shadow-lg"
+                     style="max-height: 400px;">
+            </div>
+        </div>
+    </section>
+
+    <!-- Our Mission Section -->
+    <section class="about-section">
+        <h2 class="text-center mb-5">Notre Mission</h2>
+        <div class="row">
+            <div class="col-md-4 text-center mb-4 feature-box">
+                <i class="bi bi-search feature-icon"></i>
+                <h3>Découvrir</h3>
+                <p>Aider les lecteurs à trouver leur prochaine lecture favorite grâce à notre système de recommandation intelligent et personnalisé.</p>
+            </div>
+            <div class="col-md-4 text-center mb-4 feature-box">
+                <i class="bi bi-share feature-icon"></i>
+                <h3>Partager</h3>
+                <p>Créer une communauté dynamique où les lecteurs peuvent échanger leurs découvertes, avis et recommandations.</p>
+            </div>
+            <div class="col-md-4 text-center mb-4 feature-box">
+                <i class="bi bi-heart feature-icon"></i>
+                <h3>Inspirer</h3>
+                <p>Encourager la lecture et soutenir les auteurs émergents en mettant en valeur leurs œuvres auprès de notre communauté.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Team Section -->
+    <section class="about-section">
+        <h2 class="text-center mb-5">Notre Équipe</h2>
+        <div class="row justify-content-center">
+            <div class="col-md-5 team-member">
+                <img src="https://ui-avatars.com/api/?name=Hamza+Elbouanani&background=4e73df&color=fff&size=150"
+                     alt="Hamza Elbouanani"
+                     class="img-fluid">
+                <h3>Hamza Elbouanani</h3>
+                <p class="text-muted">Développeur Principal</p>
+                <p>Expert en technologie, Hamza transforme nos idées en réalité avec des solutions innovantes et performantes.</p>
+                <div class="mt-3">
+                    <a href="#" class="social-link"><i class="bi bi-linkedin"></i></a>
+                    <a href="#" class="social-link"><i class="bi bi-github"></i></a>
+                    <a href="#" class="social-link"><i class="bi bi-twitter"></i></a>
+                </div>
+            </div>
+            <div class="col-md-5 team-member">
+                <img src="https://ui-avatars.com/api/?name=Saad+Bendahou&background=2e59d9&color=fff&size=150"
+                     alt="Saad Bendahou"
+                     class="img-fluid">
+                <h3>Saad Bendahou</h3>
+                <p class="text-muted">Développeur Principal</p>
+                <p>Passionné par l'expérience utilisateur, Saad veille à ce que chaque interaction avec notre plateforme soit intuitive et agréable.</p>
+                <div class="mt-3">
+                    <a href="#" class="social-link"><i class="bi bi-linkedin"></i></a>
+                    <a href="#" class="social-link"><i class="bi bi-github"></i></a>
+                    <a href="#" class="social-link"><i class="bi bi-twitter"></i></a>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<!-- Offcanvas Menu -->
+<div class="offcanvas offcanvas-end" tabindex="-1" id="mainMenu">
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title">Find2Read</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body p-0">
+        <div sec:authorize="isAuthenticated()">
+            <a href="/profile" class="menu-item">
+                <i class="bi bi-person"></i> Mon Profil
+            </a>
+            <a href="/library" class="menu-item">
+                <i class="bi bi-bookmark-heart"></i> Ma Bibliothèque
+            </a>
+            <a href="/novels/new" class="menu-item">
+                <i class="bi bi-plus-circle"></i> Ajouter un Roman
+            </a>
+        </div>
+        <div th:unless="${isAuthenticated}">
+            <a href="/auth/login" class="menu-item">
+                <i class="bi bi-box-arrow-in-right"></i> Connexion
+            </a>
+            <a href="/auth/signup" class="menu-item">
+                <i class="bi bi-person-plus"></i> Inscription
+            </a>
+        </div>
+        <a href="/" class="menu-item">
+            <i class="bi bi-house"></i> Accueil
+        </a>
+        <a href="/novels" class="menu-item">
+            <i class="bi bi-book"></i> Tous les Romans
+        </a>
+
+    </div>
+</div>
+
+<!-- Footer -->
+<footer class="text-center">
+    <div class="container">
+        <p class="mb-2">&copy; 2025 Find2Read. Tous droits réservés.</p>
+        <div>
+            <a href="#" class="social-link"><i class="bi bi-facebook"></i></a>
+            <a href="#" class="social-link"><i class="bi bi-instagram"></i></a>
+            <a href="#" class="social-link"><i class="bi bi-youtube"></i></a>
+        </div>
+    </div>
+</footer>
+
+<!-- Bootstrap JS (Optional) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

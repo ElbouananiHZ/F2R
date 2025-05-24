@@ -1,116 +1,732 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8" />
-    <title th:text="${novel.name} + ' - Page ' + ${page.pageNumber}">Page Lecture</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${novel.name} + ' - Page ' + ${page.pageNumber}">Find2Read - Page</title>
 
-    <!-- Bootstrap CSS -->
+    <!-- Bootstrap & Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&family=Roboto&family=Courier+Prime&display=swap" rel="stylesheet" />
 
-    <!-- Google Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
-
+    <!-- Custom CSS -->
     <style>
+        :root {
+            --bg-color: #f5f8fa;
+            --text-color: #333;
+            --content-bg: #fff;
+            --primary-color: #0d6efd;
+            --secondary-color: #6c757d;
+            --border-radius: 16px;
+            --box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+            --navbar-height: 70px;
+        }
+
         body {
-            background: linear-gradient(135deg, #e3f2fd, #fce4ec);
+            background: var(--bg-color);
             font-family: 'Quicksand', sans-serif;
+            color: var(--text-color);
+            transition: var(--transition);
+            padding-top: var(--navbar-height);
             min-height: 100vh;
+        }
+
+        .navbar {
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            transition: var(--transition);
+            height: var(--navbar-height);
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
         .reader-container {
             max-width: 900px;
-            margin: 60px auto;
-            padding: 40px;
-            background: #fff;
-            border-radius: 20px;
-            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
-            transition: all 0.3s ease-in-out;
-        }
-
-        .reader-container:hover {
-            transform: scale(1.01);
-        }
-
-        .page-title {
-            font-weight: 600;
-            font-size: 2rem;
-            color: #343a40;
+            margin: 2rem auto;
+            padding: 2.5rem;
+            background: var(--content-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            transition: var(--transition);
         }
 
         .page-content {
             font-size: 1.25rem;
             line-height: 1.8;
-            color: #555;
             white-space: pre-line;
-            border-left: 5px solid #0d6efd;
-            padding-left: 20px;
+            padding: 1rem;
+            border-left: 5px solid var(--primary-color);
+            transition: var(--transition);
+            min-height: 60vh;
         }
 
-        .btn-custom {
-            border-radius: 30px;
-            padding: 10px 20px;
-            transition: 0.3s ease;
+        /* Theme Variations */
+        .dark-mode {
+            --bg-color: #121212;
+            --text-color: #f1f1f1;
+            --content-bg: #1e1e1e;
+            --primary-color: #3a86ff;
+            --secondary-color: #adb5bd;
+            --box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
         }
 
-        .btn-custom:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        .dark-mode .navbar {
+            background-color: #1e1e1e !important;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
         }
 
-        .action-buttons {
-            margin-top: 30px;
+        .dark-mode .dropdown-menu {
+            background-color: #2d2d2d;
+            border-color: #444;
+        }
+
+        .dark-mode .dropdown-item {
+            color: #f1f1f1;
+        }
+
+        .dark-mode .dropdown-item:hover {
+            background-color: #3a3a3a;
+        }
+
+        .blue-mode {
+            --bg-color: #e3f2fd;
+            --text-color: #0d47a1;
+            --content-bg: #ffffff;
+            --primary-color: #1565c0;
+            --secondary-color: #5c6bc0;
+        }
+
+        /* Quick Settings Toggle */
+        .quick-settings {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-left: auto;
+            margin-right: 1rem;
+        }
+
+        .quick-toggle {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 30px;
+        }
+
+        .quick-toggle input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .quick-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: var(--transition);
+            border-radius: 34px;
+        }
+
+        .quick-slider:before {
+            position: absolute;
+            content: "";
+            height: 22px;
+            width: 22px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: var(--transition);
+            border-radius: 50%;
+        }
+
+        input:checked + .quick-slider {
+            background-color: var(--primary-color);
+        }
+
+        input:checked + .quick-slider:before {
+            transform: translateX(30px);
+        }
+
+        .quick-toggle-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+
+        /* Font Size Controls */
+        .font-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .font-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--content-bg);
+            border: 1px solid var(--secondary-color);
+            color: var(--text-color);
+            transition: var(--transition);
+        }
+
+        .font-btn:hover {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .font-btn.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        /* Settings Panel */
+        .settings-panel label {
+            font-weight: 600;
+            margin-top: 10px;
+            display: block;
+        }
+
+        .dropdown-menu {
+            width: 320px;
+            padding: 1rem;
+            border-radius: var(--border-radius);
+        }
+
+        .dropdown-header {
+            font-weight: 600;
+            font-size: 1.1rem;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+            margin-bottom: 0.75rem;
+            padding-bottom: 0.5rem;
+        }
+
+        /* Table of Contents */
+        .toc-item {
+            transition: var(--transition);
+        }
+
+        .toc-item:hover {
+            background-color: rgba(var(--primary-color), 0.1);
+        }
+
+        .toc-item.active {
+            background-color: rgba(var(--primary-color), 0.2);
+            border-left: 3px solid var(--primary-color);
+        }
+
+        /* Navigation Buttons */
+        .nav-btn {
+            min-width: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            transition: var(--transition);
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .reader-container {
+                padding: 1.5rem;
+                margin: 1rem auto;
+                border-radius: 0;
+            }
+
+            .page-content {
+                font-size: 1.1rem;
+                padding: 0.5rem;
+            }
+
+            .dropdown-menu {
+                width: 100%;
+            }
+
+            .quick-settings {
+                gap: 0.5rem;
+            }
+
+            .quick-toggle {
+                width: 50px;
+                height: 26px;
+            }
+
+            .quick-slider:before {
+                height: 18px;
+                width: 18px;
+            }
+
+            input:checked + .quick-slider:before {
+                transform: translateX(24px);
+            }
+        }
+
+        /* Accessibility Improvements */
+        a:focus, button:focus {
+            outline: 2px solid var(--primary-color);
+            outline-offset: 2px;
+        }
+
+        /* Loading Animation */
+        .loading-placeholder {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+            border-radius: 4px;
+            min-height: 20px;
+        }
+
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        /* Floating Action Button */
+        .fab {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            z-index: 100;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .fab:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 24px rgba(0, 0, 0, 0.25);
+        }
+
+        .fab i {
+            font-size: 1.5rem;
+        }
+
+        /* Progress Bar */
+        .reading-progress {
+            position: fixed;
+            top: var(--navbar-height);
+            left: 0;
+            height: 4px;
+            background: var(--primary-color);
+            z-index: 1000;
+            transition: width 0.2s ease;
         }
     </style>
 </head>
 <body>
-<div class="container">
-    <div class="reader-container">
 
-        <!-- Page title -->
-        <h2 class="text-center page-title mb-4" th:text="${novel.name} + ' - Page ' + ${page.pageNumber}">
-            Titre du Roman - Page
-        </h2>
+<!-- Reading Progress Bar -->
+<div class="reading-progress" id="readingProgress"></div>
 
-        <!-- Page content -->
-        <div class="page-content mb-5" th:text="${page.content}">
-            Contenu de la page...
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+    <div class="container">
+        <a class="navbar-brand" th:href="@{/novels}">
+            <i class="bi bi-book"></i> Find2Read
+        </a>
+
+        <!-- Breadcrumb Navigation -->
+        <div class="d-none d-md-flex ms-3">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-0" style="--bs-breadcrumb-divider: '›';">
+                    <li class="breadcrumb-item"><a th:href="@{/novels}">Novels</a></li>
+                    <li class="breadcrumb-item"><a th:href="@{/novels/detail/{id}(id=${novel.id})}" th:text="${novel.name}">Novel</a></li>
+                    <li class="breadcrumb-item active" aria-current="page" th:text="'Page ' + ${page.pageNumber}">Page</li>
+                </ol>
+            </nav>
         </div>
 
-        <!-- Navigation buttons -->
-        <div class="d-flex justify-content-between mb-4">
-            <a th:if="${previousPage != null}"
-               th:href="@{/novels/{novelId}/pages/{pageNumber}(novelId=${novel.id}, pageNumber=${previousPage.pageNumber})}"
-               class="btn btn-outline-secondary btn-custom">
-                ← Page Précédente
-            </a>
 
-            <a th:if="${nextPage != null}"
-               th:href="@{/novels/{novelId}/pages/{pageNumber}(novelId=${novel.id}, pageNumber=${nextPage.pageNumber})}"
-               class="btn btn-outline-primary btn-custom">
-                Page Suivante →
-            </a>
+
+            <label class="quick-toggle-label">
+                <div class="quick-toggle">
+                    <input type="checkbox" id="darkModeToggle" onchange="toggleDarkMode()">
+
+                </div>
+            </label>
         </div>
 
-        <!-- Edit and Delete -->
-        <div class="d-flex gap-3 justify-content-center action-buttons">
-            <a th:href="@{/novels/{novelId}/pages/{pageNumber}/edit(novelId=${novel.id}, pageNumber=${page.pageNumber})}"
-               class="btn btn-warning btn-custom">
-                ✏️ Modifier
-            </a>
-            <a th:href="@{/novels/{novelId}/pages/{pageNumber}/delete(novelId=${novel.id}, pageNumber=${page.pageNumber})}"
-               class="btn btn-danger btn-custom"
-               onclick="return confirm('Are you sure you want to delete this page?');">
-                🗑️ Supprimer
-            </a>
-        </div>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarDropdown" aria-controls="navbarDropdown" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-        <!-- Back to novel details -->
-        <div class="text-center mt-5">
-            <a th:href="@{/novels/detail/{id}(id=${novel.id})}" class="btn btn-secondary btn-custom">
-                ← Retour aux détails du roman
-            </a>
+        <div class="collapse navbar-collapse justify-content-end" id="navbarDropdown">
+            <ul class="navbar-nav">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle btn btn-outline-primary d-flex align-items-center gap-1" href="#" id="settingsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-gear"></i> <span class="d-none d-md-inline">Settings</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><h6 class="dropdown-header d-flex align-items-center gap-2"><i class="bi bi-sliders"></i> Settings</h6></li>
+                        <li>
+                            <div class="settings-panel px-3">
+                                <label for="themeSelect" class="d-flex align-items-center gap-2">
+                                    <i class="bi bi-palette"></i> Theme
+                                </label>
+                                <select id="themeSelect" class="form-select mb-3" onchange="applyTheme()">
+                                    <option value="default">Light (Default)</option>
+                                    <option value="dark">Dark</option>
+                                    <option value="blue">Blue</option>
+                                </select>
+
+                                <label for="fontSizeSelect" class="d-flex align-items-center gap-2">
+                                    <i class="bi bi-fonts"></i> Font Size
+                                </label>
+                                <select id="fontSizeSelect" class="form-select mb-3" onchange="changeFontSize()">
+                                    <option value="1.1rem">Small</option>
+                                    <option value="1.25rem" selected>Medium</option>
+                                    <option value="1.5rem">Large</option>
+                                    <option value="1.75rem">Extra Large</option>
+                                </select>
+
+                                <label for="fontStyleSelect" class="d-flex align-items-center gap-2">
+                                    <i class="bi bi-type"></i> Font Style
+                                </label>
+                                <select id="fontStyleSelect" class="form-select mb-3" onchange="changeFontFamily()">
+                                    <option value="'Quicksand', sans-serif">Sans Serif</option>
+                                    <option value="'Roboto', serif">Serif</option>
+                                    <option value="'Courier Prime', monospace">Monospace</option>
+                                </select>
+
+                                <label for="lineHeightSelect" class="d-flex align-items-center gap-2">
+                                    <i class="bi bi-text-paragraph"></i> Line Height
+                                </label>
+                                <select id="lineHeightSelect" class="form-select" onchange="changeLineHeight()">
+                                    <option value="1.6">Compact</option>
+                                    <option value="1.8" selected>Normal</option>
+                                    <option value="2.0">Spacious</option>
+                                </select>
+                            </div>
+                        </li>
+
+                        <li><hr class="dropdown-divider"></li>
+
+                        <li><h6 class="dropdown-header d-flex align-items-center gap-2"><i class="bi bi-list-ul"></i> Table of Contents</h6></li>
+                        <li>
+                            <div class="px-3 mb-2">
+                                <a th:href="@{/novels/{novelId}/pages/1(novelId=${novel.id})}" class="btn btn-primary w-100 d-flex align-items-center justify-content-center gap-2">
+                                    <i class="bi bi-book"></i> Start Reading
+                                </a>
+                            </div>
+                        </li>
+
+                        <li>
+                            <div class="list-group list-group-flush" style="max-height: 300px; overflow-y: auto;">
+                                <a th:each="page : ${novel.pages}"
+                                   th:href="@{/novels/{novelId}/pages/{pageNumber}(novelId=${novel.id}, pageNumber=${page.pageNumber})}"
+                                   class="list-group-item list-group-item-action toc-item d-flex justify-content-between align-items-center"
+                                   th:classappend="${page.pageNumber == currentPageNumber} ? 'active' : ''">
+                                    <span>
+                                        <span th:text="${page.pageNumber}">1</span>.
+                                        <span th:text="${page.name} ?: ('Page ' + ${page.pageNumber})">Page Title</span>
+                                    </span>
+                                    <span class="text-muted small d-flex align-items-center gap-1">
+                                        <i class="bi bi-eye-fill"></i>
+                                        <span th:text="${page.viewCount}">0</span>
+                                    </span>
+                                </a>
+                            </div>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
         </div>
     </div>
+</nav>
+
+<!-- Main Reading Container -->
+<div class="container reader-container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h2 mb-0" th:text="${novel.name}">Novel Title</h1>
+        <div class="d-flex align-items-center gap-2">
+            <span class="badge bg-primary rounded-pill">
+                <i class="bi bi-eye-fill"></i> <span th:text="${viewCount}">0</span> views
+            </span>
+            <button class="btn btn-sm btn-outline-secondary" onclick="toggleFullscreen()" title="Toggle Fullscreen">
+                <i class="bi bi-fullscreen"></i>
+            </button>
+        </div>
+    </div>
+
+    <h2 class="h4 text-muted mb-4" th:text="'Page ' + ${page.pageNumber} + (${page.name} ? ': ' + ${page.name} : '')">
+        Page Title
+    </h2>
+
+    <div id="page-content" class="page-content mb-5" th:text="${page.content}">
+        <div class="loading-placeholder" style="height: 300px;"></div>
+    </div>
+
+    <div class="d-flex justify-content-between mb-4">
+        <a th:if="${previousPage != null}"
+           th:href="@{/novels/{novelId}/pages/{pageNumber}(novelId=${novel.id}, pageNumber=${previousPage.pageNumber})}"
+           class="btn btn-outline-secondary nav-btn">
+            <i class="bi bi-chevron-left"></i> Previous
+        </a>
+        <div th:unless="${previousPage != null || nextPage != null}" class="text-muted">
+            You've reached the end
+        </div>
+        <a th:if="${nextPage != null}"
+           th:href="@{/novels/{novelId}/pages/{pageNumber}(novelId=${novel.id}, pageNumber=${nextPage.pageNumber})}"
+           class="btn btn-outline-primary nav-btn ms-auto">
+            Next <i class="bi bi-chevron-right"></i>
+        </a>
+    </div>
+
+    <div class="d-flex justify-content-center gap-3 mb-4" th:if="${currentUser != null && (currentUser.role == 'ADMIN' || novel.authorId == currentUser.id)}">
+        <a th:href="@{/novels/{novelId}/pages/{pageNumber}/edit(novelId=${novel.id}, pageNumber=${page.pageNumber})}" class="btn btn-warning d-flex align-items-center gap-1">
+            <i class="bi bi-pencil-fill"></i> Edit
+        </a>
+        <a th:href="@{/novels/{novelId}/pages/{pageNumber}/delete(novelelId=${novel.id}, pageNumber=${page.pageNumber})}" class="btn btn-danger d-flex align-items-center gap-1"
+           onclick="return confirm('Are you sure you want to delete this page? This action cannot be undone.');">
+            <i class="bi bi-trash-fill"></i> Delete
+        </a>
+    </div>
+
+    <div class="text-center">
+        <a th:href="@{/novels/detail/{id}(id=${novel.id})}" class="btn btn-outline-secondary d-flex align-items-center justify-content-center gap-1 mx-auto" style="max-width: 250px;">
+            <i class="bi bi-arrow-left"></i> Back to Novel Details
+        </a>
+    </div>
 </div>
+
+
+
+<!-- Footer -->
+<footer class="py-4 text-center text-muted small">
+    <div class="container">
+        <p class="mb-1">Find2Read &copy; <span th:text="${#temporals.format(#temporals.createNow(), 'yyyy')}">2023</span></p>
+        <p class="mb-0">Page loaded in <span id="loadTime">0</span> seconds</p>
+    </div>
+</footer>
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Track page load time
+    document.addEventListener('DOMContentLoaded', () => {
+        const loadTime = performance.now() / 1000;
+        document.getElementById('loadTime').textContent = loadTime.toFixed(2);
+
+        // Load saved preferences
+        loadPreferences();
+
+        // Highlight current page in ToC after a small delay
+        setTimeout(() => {
+            const currentPageItem = document.querySelector('.toc-item.active');
+            if (currentPageItem) {
+                currentPageItem.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+        }, 300);
+
+        // Set up reading progress bar
+        setupReadingProgress();
+    });
+
+    // Theme and settings functions
+    function applyTheme() {
+        const theme = document.getElementById("themeSelect").value;
+        document.body.classList.remove("dark-mode", "blue-mode");
+
+        if (theme === "dark") {
+            document.body.classList.add("dark-mode");
+            document.getElementById("darkModeToggle").checked = true;
+        } else if (theme === "blue") {
+            document.body.classList.add("blue-mode");
+            document.getElementById("darkModeToggle").checked = false;
+        } else {
+            document.getElementById("darkModeToggle").checked = false;
+        }
+
+        savePreferences();
+    }
+
+    function toggleDarkMode() {
+        const isDark = document.getElementById("darkModeToggle").checked;
+        if (isDark) {
+            document.getElementById("themeSelect").value = "dark";
+        } else {
+            document.getElementById("themeSelect").value = "default";
+        }
+        applyTheme();
+    }
+
+    function changeFontSize() {
+        const size = document.getElementById("fontSizeSelect").value;
+        document.getElementById("page-content").style.fontSize = size;
+        savePreferences();
+    }
+
+    function increaseFontSize() {
+        const select = document.getElementById("fontSizeSelect");
+        const options = Array.from(select.options);
+        const currentIndex = options.findIndex(opt => opt.selected);
+        if (currentIndex < options.length - 1) {
+            select.selectedIndex = currentIndex + 1;
+            changeFontSize();
+        }
+    }
+
+    function decreaseFontSize() {
+        const select = document.getElementById("fontSizeSelect");
+        const options = Array.from(select.options);
+        const currentIndex = options.findIndex(opt => opt.selected);
+        if (currentIndex > 0) {
+            select.selectedIndex = currentIndex - 1;
+            changeFontSize();
+        }
+    }
+
+    function changeFontFamily() {
+        const family = document.getElementById("fontStyleSelect").value;
+        document.getElementById("page-content").style.fontFamily = family;
+        savePreferences();
+    }
+
+    function changeLineHeight() {
+        const height = document.getElementById("lineHeightSelect").value;
+        document.getElementById("page-content").style.lineHeight = height;
+        savePreferences();
+    }
+
+    function toggleFullscreen() {
+        if (!document.fullscreenElement) {
+            document.documentElement.requestFullscreen().catch(err => {
+                console.error(`Error attempting to enable fullscreen: ${err.message}`);
+            });
+        } else {
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            }
+        }
+    }
+
+    // Save user preferences to localStorage
+    function savePreferences() {
+        const preferences = {
+            theme: document.getElementById("themeSelect").value,
+            fontSize: document.getElementById("fontSizeSelect").value,
+            fontFamily: document.getElementById("fontStyleSelect").value,
+            lineHeight: document.getElementById("lineHeightSelect").value
+        };
+        localStorage.setItem('readerPreferences', JSON.stringify(preferences));
+    }
+
+    // Load saved preferences
+    function loadPreferences() {
+        const saved = localStorage.getItem('readerPreferences');
+        if (saved) {
+            const preferences = JSON.parse(saved);
+
+            if (preferences.theme) {
+                document.getElementById("themeSelect").value = preferences.theme;
+                applyTheme();
+            }
+
+            if (preferences.fontSize) {
+                document.getElementById("fontSizeSelect").value = preferences.fontSize;
+                changeFontSize();
+            }
+
+            if (preferences.fontFamily) {
+                document.getElementById("fontStyleSelect").value = preferences.fontFamily;
+                changeFontFamily();
+            }
+
+            if (preferences.lineHeight) {
+                document.getElementById("lineHeightSelect").value = preferences.lineHeight;
+                changeLineHeight();
+            }
+        }
+    }
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+        const prevBtn = document.querySelector('.btn-outline-secondary.nav-btn');
+        const nextBtn = document.querySelector('.btn-outline-primary.nav-btn');
+
+        if (e.key === 'ArrowLeft' && prevBtn) {
+            prevBtn.click();
+        } else if (e.key === 'ArrowRight' && nextBtn) {
+            nextBtn.click();
+        }
+    });
+
+    // Floating Action Button
+    function toggleQuickSettings() {
+        const fab = document.getElementById('fab');
+        const quickSettings = document.querySelector('.quick-settings');
+
+        if (quickSettings) {
+            // Clone the quick settings and show them near the FAB
+            const clone = quickSettings.cloneNode(true);
+            clone.classList.remove('d-none', 'd-lg-flex');
+            clone.style.position = 'fixed';
+            clone.style.bottom = '100px';
+            clone.style.right = '20px';
+            clone.style.backgroundColor = 'var(--content-bg)';
+            clone.style.padding = '1rem';
+            clone.style.borderRadius = '16px';
+            clone.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.2)';
+            clone.style.zIndex = '99';
+            clone.id = 'quick-settings-popup';
+
+            document.body.appendChild(clone);
+
+            // Change FAB icon to close
+            fab.innerHTML = '<i class="bi bi-x-lg"></i>';
+            fab.setAttribute('onclick', 'closeQuickSettings()');
+        }
+    }
+
+    function closeQuickSettings() {
+        const popup = document.getElementById('quick-settings-popup');
+        if (popup) {
+            popup.remove();
+        }
+
+        const fab = document.getElementById('fab');
+        fab.innerHTML = '<i class="bi bi-magic"></i>';
+        fab.setAttribute('onclick', 'toggleQuickSettings()');
+    }
+
+    // Reading progress bar
+    function setupReadingProgress() {
+        const progressBar = document.getElementById('readingProgress');
+        if (!progressBar) return;
+
+        window.addEventListener('scroll', () => {
+            const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+            const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrollProgress = (scrollTop / scrollHeight) * 100;
+            progressBar.style.width = scrollProgress + '%';
+        });
+    }
+</script>
 </body>
 </html>

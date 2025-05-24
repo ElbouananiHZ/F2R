@@ -153,7 +153,7 @@
                     </a>
                 </li>
                 <li class="nav-item" th:if="${session.userId != null}">
-                    <a class="nav-link" th:href="@{/novels/my-novels}">
+                    <a class="nav-link" th:href="@{/novels/my-stories}">
                         <i class="bi bi-journal-text me-1"></i> Mes Romans
                     </a>
                 </li>
@@ -210,7 +210,7 @@
             <a href="/history" class="btn btn-outline-primary">
                 <i class="bi bi-clock-history me-1"></i> Historique
             </a>
-            <a th:href="@{/novels/my-novels}" class="btn btn-outline-primary">
+            <a th:href="@{/novels/my-stories}" class="btn btn-outline-primary">
                 <i class="bi bi-journal-text me-1"></i> Mes Romans
             </a>
             <a href="/novels/new" class="btn btn-primary">

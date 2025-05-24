@@ -10,7 +10,7 @@ public class Page {
     @Id
     private String id;
     private String name; // title of the page/chapter
-
+    private int viewCount = 0;
     public String getName() {
         return name;
     }
@@ -23,7 +23,13 @@ public class Page {
     private String content;
 
     private String novelId; // Just storing the ID for fast queries
+    public int getViewCount() {
+        return viewCount;
+    }
 
+    public void setViewCount(int viewCount) {
+        this.viewCount = viewCount;
+    }
     @DBRef
     private Novel novel; // Optional, for direct access if needed
 

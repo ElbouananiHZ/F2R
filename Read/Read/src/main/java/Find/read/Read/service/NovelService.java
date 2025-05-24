@@ -184,7 +184,10 @@ public class NovelService {
     public List<Novel> getNovelsByAuthorId(String authorId) {
         logger.info("Searching for novels by authorId: {}", authorId);
         List<Novel> novels = novelRepository.findByAuthorId(authorId);
-        logger.info("Found novels: {}", novels);
+        logger.info("Found {} novels for author {}", novels.size(), authorId);
+        novels.forEach(novel ->
+                logger.info("Novel: {}, ID: {}", novel.getName(), novel.getId()));
+
         return novels;
     }
     public void processNovelView(User user, Novel novel) {

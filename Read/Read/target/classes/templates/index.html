@@ -1,77 +1,381 @@
 <!DOCTYPE html>
-<html lang="fr" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Bienvenue - Gestion des Romans</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Roboto&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyNovelApp - Accueil</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary-color: #4e73df;
+            --primary-dark: #2e59d9;
+            --primary-light: #e6eaf7;
+            --secondary-color: #f8f9fc;
+            --accent-color: #ff6b6b;
+            --dark-color: #2c3e50;
+            --light-color: #f8f9fa;
+        }
+
         body {
-            margin: 0;
-            padding: 0;
-            min-height: 100vh;
             font-family: 'Roboto', sans-serif;
-            background: linear-gradient(135deg, #f8f9fa, #dee2e6);
+            background-color: var(--light-color);
+            min-height: 100vh;
+            color: var(--dark-color);
+        }
+
+        .navbar-brand {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            font-size: 1.8rem;
+            color: var(--primary-color) !important;
+            letter-spacing: -0.5px;
+        }
+
+        .hero-section {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            padding: 6rem 0 5rem;
+            margin-bottom: 3rem;
+            border-radius: 0 0 30px 30px;
+            box-shadow: 0 10px 30px rgba(78, 115, 223, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path fill="rgba(255,255,255,0.05)" d="M0,0 L100,0 L100,100 L0,100 Z" /></svg>');
+            opacity: 0.1;
+        }
+
+        .hero-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .hero-subtitle {
+            font-weight: 300;
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 700px;
+            margin: 0 auto 2rem;
+        }
+
+        .search-container {
+            max-width: 650px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .search-input {
+            padding: 1.2rem 1.8rem;
+            border-radius: 50px;
+            border: none;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.15);
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            box-shadow: 0 5px 30px rgba(0,0,0,0.2);
+            outline: none;
+        }
+
+        .search-btn {
+            position: absolute;
+            right: 6px;
+            top: 6px;
+            border-radius: 50px;
+            padding: 0.85rem 1.8rem;
+            background-color: var(--primary-dark);
+            border: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .search-btn:hover {
+            background-color: var(--dark-color);
+            transform: translateY(-2px);
+        }
+
+        .feature-card {
+            border: none;
+            border-radius: 15px;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            margin-bottom: 2rem;
+            height: 100%;
+            background-color: white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        }
+
+        .feature-icon {
+            font-size: 2.8rem;
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover .feature-icon {
+            transform: scale(1.1);
+        }
+
+        .feature-card h3 {
+            font-family: 'Playfair Display', serif;
+            margin-bottom: 1rem;
+            color: var(--dark-color);
+        }
+
+        .feature-card p {
+            color: #666;
+            margin-bottom: 1.5rem;
+            font-weight: 300;
+        }
+
+        .btn-outline-primary {
+            border-width: 2px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(78, 115, 223, 0.3);
+        }
+
+        /* Offcanvas menu styles */
+        .offcanvas-header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1.5rem;
+        }
+
+        .offcanvas-title {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            font-size: 1.5rem;
+        }
+
+        .offcanvas-body {
+            padding: 0;
+        }
+
+        .menu-item {
+            padding: 1.2rem 1.8rem;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            transition: all 0.2s ease;
             display: flex;
             align-items: center;
-            justify-content: center;
+            gap: 15px;
+            color: var(--dark-color);
+            font-weight: 500;
         }
 
-        .main-container {
+        .menu-item:hover {
+            background-color: var(--primary-light);
+            text-decoration: none;
+            color: var(--primary-dark);
+            transform: translateX(5px);
+        }
+
+        .menu-item i {
+            width: 24px;
             text-align: center;
-            background-color: white;
-            padding: 60px;
-            border-radius: 20px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-            animation: fadeIn 1s ease-in-out;
-        }
-
-        h1 {
-            font-family: 'Playfair Display', serif;
-            font-size: 2.8rem;
-            color: #343a40;
-            margin-bottom: 1rem;
-        }
-
-        p {
             font-size: 1.2rem;
-            color: #6c757d;
-            margin-bottom: 2rem;
         }
 
-        .btn {
-            padding: 12px 28px;
-            font-size: 1.1rem;
-            border-radius: 30px;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1rem;
+            }
+
+            .navbar-brand {
+                font-size: 1.5rem;
+            }
         }
 
-        .btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-        }
-
+        /* Animation */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
+
+        .animated-card {
+            animation: fadeIn 0.6s ease forwards;
+        }
+
+        .card-1 { animation-delay: 0.1s; }
+        .card-2 { animation-delay: 0.2s; }
+        .card-3 { animation-delay: 0.3s; }
     </style>
 </head>
 <body>
+<!-- Navigation Bar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm py-3">
+    <div class="container">
+        <a class="navbar-brand" href="/">Find2Read</a>
 
-<div class="main-container">
-    <li class="nav-item">
-        <a class="nav-link" th:href="@{/profile}" th:if="${isAuthenticated}">My Profile</a>
-    </li>
-    <h1>📖 Bienvenue sur l'application de gestion des romans</h1>
-    <p>Gérez vos romans favoris : ajoutez, modifiez, explorez et organisez vos lectures par catégories.</p>
-    <div class="mt-4">
-        <a href="/novels" class="btn btn-primary me-3">Voir tous les romans</a>
-        <a href="/novels/new" class="btn btn-success">➕ Ajouter un nouveau roman</a>
-        <a href="/admin/login" class="btn btn-info mt-3">🔑 Se connecter en tant qu'administrateur</a> <!-- Added login button -->
+        <!-- Hamburger menu button -->
+        <button class="btn btn-outline-primary ms-auto d-flex align-items-center" type="button" data-bs-toggle="offcanvas" data-bs-target="#mainMenu">
+            <i class="bi bi-list me-1"></i> Menu
+        </button>
+    </div>
+</nav>
+
+<!-- Hero Section with single search bar -->
+<section class="hero-section">
+    <div class="container text-center">
+        <h1 class="hero-title">Découvrez votre prochaine lecture</h1>
+        <p class="hero-subtitle">Explorez des milliers de romans, gérez votre bibliothèque personnelle et partagez vos découvertes</p>
+
+        <!-- Single search form that submits to /novels/search-page -->
+        <form class="search-container" action="/novels/search-page" method="get">
+            <input class="form-control search-input"
+                   type="search"
+                   name="query"
+                   placeholder="Rechercher par titre, auteur ou genre..."
+                   aria-label="Search"
+                   required>
+            <button class="btn btn-light search-btn" type="submit">
+                <i class="bi bi-search"></i> Rechercher
+            </button>
+        </form>
+    </div>
+</section>
+
+<!-- Features Section with updated cards -->
+<section class="container mb-5">
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card feature-card animated-card card-1">
+                <div class="card-body text-center p-4">
+                    <div class="feature-icon">
+                        <i class="bi bi-book"></i>
+                    </div>
+                    <h3>Tous les Romans</h3>
+                    <p>Parcourez notre vaste collection de romans de tous genres et époques.</p>
+                    <a href="/novels" class="btn btn-outline-primary">Explorer</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card feature-card animated-card card-2">
+                <div class="card-body text-center p-4">
+                    <div class="feature-icon">
+                        <i class="bi bi-plus-circle"></i>
+                    </div>
+                    <h3>Ajouter un Roman</h3>
+                    <p>Contribuez à notre communauté en ajoutant de nouveaux titres.</p>
+                    <a href="/novels/new" class="btn btn-outline-primary">Ajouter</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card feature-card animated-card card-3">
+                <div class="card-body text-center p-4">
+                    <div class="feature-icon">
+                        <i class="bi bi-bookmark-heart"></i>
+                    </div>
+                    <h3>Votre Bibliothèque</h3>
+                    <p>Organisez et suivez vos lectures dans votre espace personnel.</p>
+                    <a href="/library" class="btn btn-outline-primary">Voir</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Offcanvas Menu -->
+<div class="offcanvas offcanvas-end" tabindex="-1" id="mainMenu">
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title">Find2Read</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body p-0">
+        <div sec:authorize="isAuthenticated()">
+            <a href="/profile" class="menu-item">
+                <i class="bi bi-person"></i> Mon Profil
+            </a>
+            <a href="/library" class="menu-item">
+                <i class="bi bi-bookmark-heart"></i> Ma Bibliothèque
+            </a>
+            <a href="/novels/new" class="menu-item">
+                <i class="bi bi-plus-circle"></i> Ajouter un Roman
+            </a>
+        </div>
+        <div th:unless="${isAuthenticated}">
+            <a href="/auth/login" class="menu-item">
+                <i class="bi bi-box-arrow-in-right"></i> Connexion
+            </a>
+            <a href="/auth/signup" class="menu-item">
+                <i class="bi bi-person-plus"></i> Inscription
+            </a>
+        </div>
+        <a href="/" class="menu-item">
+            <i class="bi bi-house"></i> Accueil
+        </a>
+        <a href="/novels" class="menu-item">
+            <i class="bi bi-book"></i> Tous les Romans
+        </a>
+        <a href="/novels/about" class="menu-item">
+            <i class="bi bi-info-circle"></i> À propos
+        </a>
     </div>
 </div>
 
+<!-- Bootstrap JS Bundle with Popper -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Search form validation
+        const searchForm = document.querySelector('.hero-section form');
+        if (searchForm) {
+            searchForm.addEventListener('submit', function(e) {
+                const query = this.querySelector('input[name="query"]').value.trim();
+                if (query === '') {
+                    e.preventDefault();
+                    alert('Veuillez entrer un terme de recherche');
+                }
+            });
+        }
+
+        // Add animation class to cards when they come into view
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animated-card');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.feature-card').forEach(card => {
+            observer.observe(card);
+        });
+    });
+</script>
 </body>
 </html>

@@ -2,135 +2,216 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Sign Up</title>
+    <title>Find2Read | Sign Up</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     <style>
+        :root {
+            --primary-color: #6a11cb;
+            --secondary-color: #2575fc;
+            --accent-color: #ff6b6b;
+        }
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(to right, #6a11cb, #2575fc);
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
             margin: 0;
             padding: 0;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
         }
 
-        .auth-container {
-            background-color: #fff;
-            padding: 2rem 3rem;
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .auth-card {
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 2.5rem;
             border-radius: 15px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
             width: 100%;
-            max-width: 400px;
+            max-width: 450px;
+            transform: translateY(0);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
-        .auth-container h1 {
+        .auth-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        }
+
+        .logo {
             text-align: center;
             margin-bottom: 1.5rem;
-            color: #333;
+            color: var(--primary-color);
+            font-weight: 700;
+            font-size: 2rem;
         }
 
-        .form-group {
-            margin-bottom: 1rem;
+        .logo span {
+            color: var(--secondary-color);
         }
 
-        label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-            color: #333;
-        }
-
-        input[type="text"],
-        input[type="email"],
-        input[type="password"] {
-            width: 100%;
-            padding: 0.75rem;
-            border: 1px solid #ccc;
+        .form-control {
             border-radius: 8px;
-            font-size: 1rem;
-            transition: border-color 0.3s;
+            padding: 12px 15px;
+            border: 1px solid #e0e0e0;
+            transition: all 0.3s;
         }
 
-        input[type="text"]:focus,
-        input[type="email"]:focus,
-        input[type="password"]:focus {
-            border-color: #2575fc;
-            outline: none;
+        .form-control:focus {
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 0.2rem rgba(37, 117, 252, 0.25);
         }
 
-        .btn {
-            display: inline-block;
-            width: 100%;
-            padding: 0.75rem;
-            background-color: #2575fc;
+        .btn-primary {
+            background-color: var(--secondary-color);
             border: none;
             border-radius: 8px;
-            color: white;
-            font-weight: bold;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: background-color 0.3s;
+            padding: 12px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            transition: all 0.3s;
         }
 
-        .btn:hover {
+        .btn-primary:hover {
             background-color: #1a5dcc;
+            transform: translateY(-2px);
         }
 
-        .alert {
-            padding: 0.75rem 1rem;
-            margin-bottom: 1rem;
-            border-radius: 5px;
-            font-size: 0.95rem;
-        }
-
-        .alert-danger {
-            background-color: #ffcccc;
-            color: #990000;
-        }
-
-        p {
+        .auth-footer {
             text-align: center;
-            margin-top: 1rem;
-            font-size: 0.95rem;
+            margin-top: 1.5rem;
+            color: #6c757d;
         }
 
-        p a {
-            color: #2575fc;
+        .auth-footer a {
+            color: var(--secondary-color);
+            font-weight: 600;
             text-decoration: none;
+            transition: all 0.3s;
         }
 
-        p a:hover {
+        .auth-footer a:hover {
+            color: var(--primary-color);
             text-decoration: underline;
+        }
+
+        .password-strength {
+            height: 5px;
+            background: #e9ecef;
+            border-radius: 5px;
+            margin-top: 5px;
+            overflow: hidden;
+        }
+
+        .strength-meter {
+            height: 100%;
+            width: 0;
+            transition: width 0.3s ease, background-color 0.3s ease;
         }
     </style>
 </head>
 <body>
-<div class="auth-container">
-    <h1>Sign Up</h1>
+<div class="auth-card animate__animated animate__fadeIn">
+    <div class="logo">
+        Find2<span>Read</span>
+    </div>
 
-    <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+    <h2 class="text-center mb-4">Create Your Account</h2>
+
+    <div th:if="${error}" class="alert alert-danger animate__animated animate__shakeX" role="alert">
+        <span th:text="${error}"></span>
+    </div>
 
     <form action="/auth/signup" method="post">
         <div class="form-group">
             <label for="username">Username</label>
-            <input type="text" id="username" name="username" required>
+            <input type="text" id="username" name="username" class="form-control" placeholder="Choose a username" required>
         </div>
 
         <div class="form-group">
             <label for="email">Email</label>
-            <input type="email" id="email" name="email" required>
+            <input type="email" id="email" name="email" class="form-control" placeholder="Enter your email" required>
         </div>
 
         <div class="form-group">
             <label for="password">Password</label>
-            <input type="password" id="password" name="password" required>
+            <input type="password" id="password" name="password" class="form-control" placeholder="Create a password" required
+                   oninput="checkPasswordStrength(this.value)">
+            <div class="password-strength">
+                <div class="strength-meter" id="strengthMeter"></div>
+            </div>
+            <small class="form-text text-muted">Use at least 8 characters with a mix of letters, numbers, and symbols</small>
         </div>
 
-        <button type="submit" class="btn btn-primary">Sign Up</button>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary btn-block">Sign Up</button>
+        </div>
     </form>
 
-    <p>Already have an account? <a href="/auth/login">Login here</a></p>
+    <div class="auth-footer">
+        Already have an account? <a href="/auth/login">Login here</a>
+    </div>
 </div>
+
+<script>
+    function checkPasswordStrength(password) {
+        const strengthMeter = document.getElementById('strengthMeter');
+        let strength = 0;
+
+        // Check length
+        if (password.length >= 8) strength += 1;
+        if (password.length >= 12) strength += 1;
+
+        // Check for mixed case
+        if (password.match(/([a-z].*[A-Z])|([A-Z].*[a-z])/)) strength += 1;
+
+        // Check for numbers
+        if (password.match(/[0-9]/)) strength += 1;
+
+        // Check for special chars
+        if (password.match(/[^a-zA-Z0-9]/)) strength += 1;
+
+        // Update strength meter
+        switch(strength) {
+            case 0:
+                strengthMeter.style.width = '0%';
+                strengthMeter.style.backgroundColor = 'transparent';
+                break;
+            case 1:
+                strengthMeter.style.width = '20%';
+                strengthMeter.style.backgroundColor = '#ff6b6b';
+                break;
+            case 2:
+                strengthMeter.style.width = '40%';
+                strengthMeter.style.backgroundColor = '#ffb347';
+                break;
+            case 3:
+                strengthMeter.style.width = '60%';
+                strengthMeter.style.backgroundColor = '#f9d423';
+                break;
+            case 4:
+                strengthMeter.style.width = '80%';
+                strengthMeter.style.backgroundColor = '#a1c45a';
+                break;
+            case 5:
+                strengthMeter.style.width = '100%';
+                strengthMeter.style.backgroundColor = '#2ecc71';
+                break;
+        }
+    }
+</script>
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 </body>
 </html>

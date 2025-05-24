@@ -1,38 +1,190 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Login</title>
+    <meta charset="UTF-8">
+    <title>Find2Read | Login</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <style>
+        :root {
+            --primary-color: #6a11cb;
+            --secondary-color: #2575fc;
+            --accent-color: #ff6b6b;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .auth-card {
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 2.5rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            width: 100%;
+            max-width: 450px;
+            transform: translateY(0);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .auth-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            color: var(--primary-color);
+            font-weight: 700;
+            font-size: 2rem;
+        }
+
+        .logo span {
+            color: var(--secondary-color);
+        }
+
+        .form-control {
+            border-radius: 8px;
+            padding: 12px 15px;
+            border: 1px solid #e0e0e0;
+            transition: all 0.3s;
+        }
+
+        .form-control:focus {
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 0.2rem rgba(37, 117, 252, 0.25);
+        }
+
+        .btn-primary {
+            background-color: var(--secondary-color);
+            border: none;
+            border-radius: 8px;
+            padding: 12px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            transition: all 0.3s;
+        }
+
+        .btn-primary:hover {
+            background-color: #1a5dcc;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background-color: #f8f9fa;
+            color: #495057;
+            border: none;
+            border-radius: 8px;
+            padding: 12px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-secondary:hover {
+            background-color: #e2e6ea;
+            transform: translateY(-2px);
+        }
+
+        .auth-footer {
+            text-align: center;
+            margin-top: 1.5rem;
+            color: #6c757d;
+        }
+
+        .auth-footer a {
+            color: var(--secondary-color);
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .auth-footer a:hover {
+            color: var(--primary-color);
+            text-decoration: underline;
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 1.5rem 0;
+            color: #6c757d;
+        }
+
+        .divider::before, .divider::after {
+            content: "";
+            flex: 1;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .divider::before {
+            margin-right: 1rem;
+        }
+
+        .divider::after {
+            margin-left: 1rem;
+        }
+    </style>
 </head>
 <body>
-<div class="container">
-    <h2 class="mt-5">Login</h2>
+<div class="auth-card animate__animated animate__fadeIn">
+    <div class="logo">
+        Find2<span>Read</span>
+    </div>
+
+    <h2 class="text-center mb-4">Welcome Back</h2>
+
+    <div th:if="${error}" class="alert alert-danger animate__animated animate__shakeX" role="alert">
+        <span th:text="${error}"></span>
+    </div>
 
     <form action="/auth/login" method="post">
         <div class="form-group">
-            <label for="email">Email:</label>
+            <label for="email">Email</label>
             <input type="email" id="email" name="email" class="form-control" placeholder="Enter your email" required>
         </div>
 
         <div class="form-group">
-            <label for="password">Password:</label>
+            <label for="password">Password</label>
             <input type="password" id="password" name="password" class="form-control" placeholder="Enter your password" required>
+            <small class="form-text text-right">
+                <a href="/auth/forgot-password" class="text-muted">Forgot password?</a>
+            </small>
         </div>
-
-        <p>Don't have an account? <a href="/auth/signup">Sign up here</a></p>
 
         <div class="form-group">
-            <button type="submit" class="btn btn-primary">Login</button>
-            <a href="/novels" class="btn btn-secondary ml-2">Back to List</a>
+            <button type="submit" class="btn btn-primary btn-block">Login</button>
         </div>
 
+        <div class="divider">or</div>
 
-        <div th:if="${error}">
-            <div class="alert alert-danger" role="alert">
-                <span th:text="${error}"></span>
-            </div>
+        <div class="form-group">
+            <a href="/novels" class="btn btn-secondary btn-block">Continue as Guest</a>
         </div>
     </form>
+
+    <div class="auth-footer">
+        Don't have an account? <a href="/auth/signup">Sign up here</a>
+    </div>
 </div>
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 </body>
 </html>

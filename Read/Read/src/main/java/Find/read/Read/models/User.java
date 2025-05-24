@@ -30,14 +30,14 @@ public class User {
     private LocalDateTime lastViewedDate;
     private Map<NovelTag, Integer> tagPreferences = new HashMap<>();
 
-    private Map<String, LocalDateTime> novelViewTimes = new HashMap<>();
+
     private Set<String> ratedNovels = new HashSet<>();
 
     private Map<String, Integer> categoryPreferences = new HashMap<>();
-    private Map<String, Integer> novelViewCounts = new HashMap<>();
-    private Map<String, Duration> readingTimePerNovel = new HashMap<>();
-    private Set<String> likedNovels = new HashSet<>();
-    private Set<String> completedNovels = new HashSet<>();
+
+
+
+
 
     public Map<NovelTag, Integer> getTagPreferences() {
         return tagPreferences;
@@ -51,44 +51,8 @@ public class User {
         this.categoryPreferences = categoryPreferences;
     }
 
-    public Map<String, Integer> getNovelViewCounts() {
-        return novelViewCounts;
-    }
-
-    public void setNovelViewCounts(Map<String, Integer> novelViewCounts) {
-        this.novelViewCounts = novelViewCounts;
-    }
-
-    public Map<String, Duration> getReadingTimePerNovel() {
-        return readingTimePerNovel;
-    }
-
-    public void setReadingTimePerNovel(Map<String, Duration> readingTimePerNovel) {
-        this.readingTimePerNovel = readingTimePerNovel;
-    }
 
 
-
-    public void setLikedNovels(Set<String> likedNovels) {
-        this.likedNovels = likedNovels;
-    }
-
-    public Set<String> getCompletedNovels() {
-        return completedNovels;
-    }
-
-    public void setCompletedNovels(Set<String> completedNovels) {
-        this.completedNovels = completedNovels;
-    }
-
-    // Add these methods
-    public void incrementViewCount(String novelId) {
-        novelViewCounts.merge(novelId, 1, Integer::sum);
-    }
-
-    public void addReadingTime(String novelId, Duration duration) {
-        readingTimePerNovel.merge(novelId, duration, Duration::plus);
-    }
     public Map<String, Integer> getCategoryPreferences() {
         return categoryPreferences;
     }
@@ -97,14 +61,6 @@ public class User {
         categoryPreferences.merge(category, increment, Integer::sum);
     }
 
-
-    public Map<String, LocalDateTime> getNovelViewTimes() {
-        return novelViewTimes;
-    }
-
-    public void setNovelViewTimes(Map<String, LocalDateTime> novelViewTimes) {
-        this.novelViewTimes = novelViewTimes;
-    }
 
     public Set<String> getRatedNovels() {
         return ratedNovels;

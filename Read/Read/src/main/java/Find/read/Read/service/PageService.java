@@ -66,4 +66,11 @@ public class PageService {
             pageRepository.save(p);
         });
     }
+    public void incrementPageView(String novelId, int pageNumber) {
+        Page page = getPageByNovelIdAndPageNumber(novelId, pageNumber)
+                .orElseThrow(() -> new RuntimeException("Page not found"));
+        page.setViewCount(page.getViewCount() + 1);
+        // Assuming you have a pageRepository.save() method
+        pageRepository.save(page);
+    }
 }

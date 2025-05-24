@@ -22,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/novels")
@@ -72,13 +73,6 @@ public class NovelController {
         return "novel/detail";
     }
 
-    @GetMapping
-    public String listNovels(Model model) {
-        model.addAttribute("novels", novelService.getAllNovels());
-
-        return "novel/list";
-    }
-
     @GetMapping("/new")
     public String showCreateForm(Model model, HttpSession session) {
         if (!isLoggedIn(session)) {
@@ -101,6 +95,7 @@ public class NovelController {
 
         String userId = (String) session.getAttribute("userId");
         novel.setAuthorId(userId);
+
         novel.setId(UUID.randomUUID().toString());
 
         if (!imageFile.isEmpty()) {
@@ -170,17 +165,18 @@ public class NovelController {
             model.addAttribute("novel", novel);
             model.addAttribute("comments", comments);
 
-            // Add this to the showNovelDetail method in NovelController.java
             if (isLoggedIn(session)) {
-
-
                 String userId = (String) session.getAttribute("userId");
-                userService.trackNovelView(userId, id);
+                model.addAttribute("userId", userId);
+                userService.trackNovelView(userId, id,novel);
+                userService.updateUserPreferences(userId, id, novel); // Add this line
+
                 boolean isInLibrary = userService.getUserLibrary(userId).contains(id);
                 model.addAttribute("isInLibrary", isInLibrary);
             }
 
             return "novel/detail";
+
 
         } catch (Exception e) {
             e.printStackTrace(); // PRINT the real error!
@@ -316,6 +312,16 @@ public class NovelController {
             return "error";
         }
     }
+    @GetMapping
+    public String listNovels(Model model, HttpSession session) {
+        if (isLoggedIn(session)) {
+            String userId = (String) session.getAttribute("userId");
+            model.addAttribute("userId", userId); // Add this line
+        }
+        model.addAttribute("novels", novelService.getAllNovels());
+        return "novel/list";
+    }
+
     @GetMapping("/search")
     @ResponseBody
     public ResponseEntity<List<Novel>> searchNovels(@RequestParam String query) {
@@ -330,25 +336,28 @@ public class NovelController {
         model.addAttribute("searchQuery", query);
         return "novel/list"; // Make sure this matches your template name
     }
-    @GetMapping("/my-novels")
-    public String showUserNovels(Model model, HttpSession session) {
+
+    @GetMapping("/about")
+    public String aboutPage() {
+        return "about";
+    }
+
+    @GetMapping("/my-stories")
+    public String showUserStories(Model model, HttpSession session) {
         if (!isLoggedIn(session)) {
-            logger.error("User not logged in - redirecting to login");
             return "redirect:/auth/login";
         }
 
         String userId = (String) session.getAttribute("userId");
-        logger.info("Fetching novels for user ID: {}", userId);
-
         List<Novel> userNovels = novelService.getNovelsByAuthorId(userId);
-        logger.info("Found {} novels for user {}", userNovels.size(), userId);
+
+        logger.info("Showing my-stories for user: {}", userId);
+        logger.info("Found {} novels for this user", userNovels.size());
+        userNovels.forEach(novel -> logger.info("Novel: {}", novel.getName()));
 
         model.addAttribute("novels", userNovels);
-        return "novel/my-novels";
+        model.addAttribute("username", session.getAttribute("username"));
+        return "novel/my-stories";
     }
-
-
-
-
 
 }

@@ -55,7 +55,7 @@ public class AiController {
 
         if (isUserBored(userInput)) {
             Map<String, Object> response = new HashMap<>();
-            response.put("response", "Je vois que tu t'ennuies. Clique sur le bouton ci-dessous pour recevoir des recommandations personnalisées.");
+            response.put("response", "Click the button below to receive personalized recommendations.");
             response.put("redirectTo", "/recommendation");
             return Mono.just(ResponseEntity.ok(response));
         }
@@ -65,7 +65,7 @@ public class AiController {
 
     private boolean isUserBored(String input) {
         String lower = input.toLowerCase();
-        return lower.contains("bored") || lower.contains("ennuie") || lower.contains("je m'ennuie");
+        return lower.contains("bored") || lower.contains("boring") || lower.contains("i wanna read");
     }
 
     private boolean isUserRequestingRecommendation(String input) {
@@ -76,7 +76,7 @@ public class AiController {
 
     private Mono<ResponseEntity<Map<String, Object>>> redirectToRecommendationPage() {
         Map<String, Object> response = new HashMap<>();
-        response.put("response", "Accède à la page de recommandations pour découvrir des livres qui te plairont.");
+        response.put("response", "Head to the recommendations page to find books tailored to your tastes");
         response.put("redirectTo", "/recommendation");
         return Mono.just(ResponseEntity.ok(response));
     }
@@ -92,16 +92,16 @@ public class AiController {
         return callPhiAI(prompt)
                 .flatMap(json -> {
                     JsonNode responseNode = json.get("response");
-                    String reply = (responseNode != null) ? responseNode.asText() : "Je n'ai pas bien compris, peux-tu reformuler ?";
+                    String reply = (responseNode != null) ? responseNode.asText() : "i don't understand ?";
                     return createSuccessResponse(reply);
                 })
                 .onErrorResume(this::handleAiError);
     }
 
     private String buildPrompt(String userInput) {
-        return "You are a friendly book expert assistant. Focus on literature, authors, and reading.\n" +
+        return "You are a friendly book expert assistant. your name is Find2read assistant  Focus on literature, authors, and reading.\n" +
                 "User: " + userInput + "\n" +
-                "Assistant:";
+                " Find2Read Assistant:";
     }
 
     private Mono<JsonNode> callPhiAI(String prompt) {

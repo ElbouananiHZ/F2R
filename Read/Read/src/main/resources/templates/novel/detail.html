@@ -10,14 +10,45 @@
     <style>
         :root {
             --primary-color: #5e72e4;
+            --primary-dark: #4a5acf;
             --secondary-color: #8898aa;
             --accent-color: #2dce89;
             --dark-color: #32325d;
             --light-color: #f8f9fe;
-            --comment-highlight: #f6f9fc;
+            --white: #ffffff;
             --gold-color: #ffd700;
-            --silver-color: #c0c0c0;
-            --bronze-color: #cd7f32;
+            --space-lg: 1.5rem;
+            --space-md: 1rem;
+            --space-sm: 0.5rem;
+            --space-xs: 0.25rem;
+            --radius-lg: 1rem;
+            --radius-pill: 50rem;
+            --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.15);
+            --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.2);
+            --transition-normal: 0.3s ease;
+        }
+
+
+        @keyframes typingAnimation {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-5px); }
+        }
+
+        /* ===== Responsive Design ===== */
+        @media (max-width: 768px) {
+            .navbar-brand {
+                font-size: 1.5rem;
+            }
+
+            .novel-row {
+                grid-template-columns: 1fr;
+            }
+
+            #chatContainer {
+                width: 90%;
+                right: 5%;
+                bottom: 80px;
+            }
         }
 
         body {
@@ -208,7 +239,7 @@
             box-shadow: 0 3px 15px rgba(0,0,0,0.05);
             margin-bottom: 2rem;
             overflow: hidden;
-            background-color: var(--comment-highlight);
+
             position: relative;
         }
 
@@ -269,7 +300,7 @@
         }
 
         .comment-body::before {
-            content: """;
+            content: "";
             position: absolute;
             top: 10px;
             left: 20px;
@@ -359,30 +390,136 @@
             box-shadow: 0 0 0 0.25rem rgba(94, 114, 228, 0.25);
         }
 
-        /* Floating action button */
-        .fab {
+
+        #chatButton {
             position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            width: 70px;
-            height: 70px;
+            bottom: var(--space-lg);
+            right: var(--space-lg);
+            width: 60px;
+            height: 60px;
+            background-color: var(--primary-color);
+            color: var(--white);
             border-radius: 50%;
-            background: linear-gradient(135deg, var(--accent-color), #25b87a);
-            color: white;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.75rem;
-            box-shadow: 0 6px 20px rgba(45, 206, 137, 0.5);
-            transition: all 0.3s;
-            z-index: 100;
-            border: none;
+            font-size: 1.5rem;
+            box-shadow: var(--shadow-lg);
             cursor: pointer;
+            z-index: 1000;
+            transition: transform var(--transition-normal);
+        }
+        #chatButton:hover {
+            transform: scale(1.1);
+        }
+        #chatContainer {
+            position: fixed;
+            bottom: calc(var(--space-lg) + 70px);
+            right: var(--space-lg);
+            width: 350px;
+            max-height: 500px;
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-xl);
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            z-index: 1000;
+        }
+        #chatContainer.open {
+            display: flex;
+        }
+        #chatHeader {
+            padding: var(--space-md);
+            background: var(--primary-color);
+            color: var(--white);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        #chatMessages {
+            flex: 1;
+            padding: var(--space-md);
+            overflow-y: auto;
+        }
+        #chatInputContainer {
+            padding: var(--space-md);
+            display: flex;
+            border-top: 1px solid rgba(0,0,0,0.1);
+        }
+        #chatInput {
+            flex: 1;
+            padding: var(--space-sm) var(--space-md);
+            border: 1px solid rgba(0,0,0,0.1);
+            border-radius: var(--radius-pill);
+            margin-right: var(--space-sm);
+        }
+        .message {
+            margin-bottom: var(--space-md);
+            padding: var(--space-sm) var(--space-md);
+            border-radius: var(--radius-lg);
+            max-width: 80%;
+            position: relative;
+        }
+        .ai-message {
+            background: #e8f0ff;
+            align-self: flex-start;
+        }
+        .user-message {
+            background: var(--primary-color);
+            color: var(--white);
+            align-self: flex-end;
+        }
+        .timestamp {
+            font-size: 0.75rem;
+            color: var(--secondary-color);
+            margin-top: var(--space-xs);
+            text-align: right;
+        }
+        /* Responsive chat */
+        @media (max-width: 768px) {
+            #chatContainer {
+                width: 90%;
+                right: 5%;
+                bottom: 80px;
+            }
         }
 
-        .fab:hover {
-            transform: scale(1.1);
-            box-shadow: 0 10px 25px rgba(45, 206, 137, 0.7);
+
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--secondary);
+            border-radius: 50%;
+            margin: 0 2px;
+            animation: typingAnimation 1.4s infinite ease-in-out;
+        }
+
+        .typing-dot:nth-child(1) { animation-delay: 0s; }
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes typingAnimation {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-5px); }
+        }
+
+        /* ===== Responsive Design ===== */
+        @media (max-width: 768px) {
+            .navbar-brand {
+                font-size: 1.5rem;
+            }
+
+            .novel-row {
+                grid-template-columns: 1fr;
+            }
+
+            #chatContainer {
+                width: 90%;
+                right: 5%;
+                bottom: 80px;
+            }
         }
 
         /* Tag badges */
@@ -433,7 +570,7 @@
             justify-content: center;
             color: #fff;
             font-size: 1.2rem;
-            z-index: 1;w
+            z-index: 1;
         }
 
         /* Rating stars animation */
@@ -523,6 +660,34 @@
             background: linear-gradient(to right, var(--accent-color), var(--primary-color));
             z-index: 1000;
             transition: width 0.1s;
+        }
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+        :focus-visible {
+            outline: 2px solid var(--primary);
+            outline-offset: 2px;
+        }
+        .page-view-count {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            z-index: 10;
+        }
+
+        .page-view-count .badge {
+            font-size: 0.8rem;
+            padding: 0.35rem 0.65rem;
+            background-color: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
         }
     </style>
 </head>
@@ -619,11 +784,14 @@
                     <a th:each="page : ${novel.pages}"
                        th:href="@{/novels/{novelId}/pages/{pageNumber}(novelId=${novel.id}, pageNumber=${page.pageNumber})}"
                        class="list-group-item list-group-item-action toc-item d-flex justify-content-between align-items-center">
-                        <span>
-                            <span th:text="${page.pageNumber}">1</span>.
-                            <span th:text="${page.name} ?: ('Page ' + ${page.pageNumber})">Page Title</span>
-                        </span>
-                        <i class="bi bi-chevron-right text-muted"></i>
+        <span>
+            <span th:text="${page.pageNumber}">1</span>.
+            <span th:text="${page.name} ?: ('Page ' + ${page.pageNumber})">Page Title</span>
+        </span>
+                        <span class="text-muted small">
+            <i class="bi bi-eye-fill"></i>
+            <span th:text="${page.viewCount}">0</span>
+        </span>
                     </a>
                 </div>
             </section>
@@ -731,12 +899,13 @@
                 </div>
             </section>
 
+
             <!-- Footer Buttons -->
             <footer class="d-flex justify-content-between border-top pt-4 mt-5">
                 <a th:href="@{/novels}" class="btn btn-outline-secondary">
                     <i class="bi bi-arrow-left"></i> Back to Library
                 </a>
-                <div>
+                <div th:if="${novel.authorId == userId}">
                     <a th:href="@{/novels/edit/{id}(id=${novel.id})}" class="btn btn-warning me-2">
                         <i class="bi bi-pencil-square"></i> Edit Novel
                     </a>
@@ -752,15 +921,21 @@
                     </a>
                 </div>
             </footer>
+            <!-- AI Chat Floating Button & Container -->
+
+            <div id="chatButton" title="Chat AI"><i class="bi bi-chat-dots-fill"></i></div>
+            <div id="chatContainer">
+                <div id="chatHeader"><span>Chat AI</span><i class="bi bi-x-lg" style="cursor:pointer;"></i></div>
+                <div id="chatMessages">
+                </div>
+                <div id="chatInputContainer">
+                    <input type="text" id="chatInput" placeholder="Écrivez un message..." autocomplete="off">
+                    <button onclick="sendMessage()"><i class="bi bi-send-fill"></i></button>
+                </div>
+            </div>
         </main>
     </div>
 </div>
-
-<!-- Floating Action Button -->
-<a th:href="@{/novels/{novelId}/pages/1(novelId=${novel.id})}" class="fab" title="Start Reading">
-    <i class="bi bi-book"></i>
-</a>
-
 <script>
     // Toggle reply form visibility
     function toggleReplyForm(button) {
@@ -800,11 +975,251 @@
         }
     }
 
-    // Initialize when DOM is loaded
     document.addEventListener('DOMContentLoaded', function() {
-        observeNewComments();
-    });
-</script>
+        // Initialize chat functionality
+        initializeChat();
 
+        // Highlight novel card on click
+        document.querySelectorAll('.novel-card').forEach(card => {
+            card.addEventListener('click', e => {
+                if (e.target.tagName !== 'A') {
+                    document.querySelectorAll('.novel-card').forEach(c => c.classList.remove('active'));
+                    card.classList.add('active');
+                }
+            });
+        });
+
+        // Remove highlight when clicking outside
+        document.addEventListener('click', e => {
+            if (!e.target.closest('.novel-card')) {
+                document.querySelectorAll('.novel-card').forEach(c => c.classList.remove('active'));
+            }
+        });
+    });
+
+    function initializeChat() {
+        const chatButton = document.getElementById('chatButton');
+        const chatContainer = document.getElementById('chatContainer');
+
+        if (!chatButton || !chatContainer) {
+            console.error('Chat elements not found');
+            return;
+        }
+
+        const chatHeader = document.getElementById('chatHeader');
+        const closeIcon = chatHeader.querySelector('i.bi-x-lg');
+        const chatMessages = document.getElementById('chatMessages');
+        const chatInput = document.getElementById('chatInput');
+        let isAIResponding = false;
+
+        // Toggle chat container when clicking the chat button
+        chatButton.addEventListener('click', function(e) {
+            e.stopPropagation();
+            toggleChat();
+        });
+
+        // Close chat when clicking on the close icon in header
+        closeIcon.addEventListener('click', function(e) {
+            e.stopPropagation();
+            closeChat();
+        });
+
+        // Close chat when clicking anywhere outside
+        document.addEventListener('click', function(e) {
+            if (!chatContainer.contains(e.target) && e.target !== chatButton) {
+                closeChat();
+            }
+        });
+
+        // Allow sending message with Enter key
+        chatInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        function toggleChat() {
+            chatContainer.classList.toggle('open');
+            if (chatContainer.classList.contains('open')) {
+                chatInput.focus();
+            }
+        }
+
+        function closeChat() {
+            chatContainer.classList.remove('open');
+        }
+
+        function showTypingIndicator() {
+            if (isAIResponding) return;
+
+            isAIResponding = true;
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'typing-indicator';
+            typingDiv.innerHTML = `
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+            `;
+            chatMessages.appendChild(typingDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function hideTypingIndicator() {
+            const typingIndicator = document.querySelector('.typing-indicator');
+            if (typingIndicator) {
+                typingIndicator.remove();
+            }
+            isAIResponding = false;
+        }
+
+        function addMessage(text, isUser) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${isUser ? 'user-message' : 'ai-message'}`;
+
+            const now = new Date();
+            const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+            messageDiv.innerHTML = `
+                ${text}
+                <div class="timestamp">${timeString}</div>
+            `;
+
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        window.sendMessage = async function() {
+            const message = chatInput.value.trim();
+            if (message === '') return;
+
+            // Add user message to chat
+            addMessage(message, true);
+            chatInput.value = '';
+
+            showTypingIndicator();
+
+            try {
+                const response = await fetch('/api/ai/generate', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('jwtToken') || ''}`
+                    },
+                    body: JSON.stringify({ prompt: message })
+                });
+
+                const data = await response.json();
+                hideTypingIndicator();
+
+                if (!response.ok) {
+                    addMessage(data.response || "Sorry, an error occurred", false);
+                    if (data.response && data.response.includes("log in")) {
+                        showLoginPrompt();
+                    }
+                    return;
+                }
+
+                // Add AI response
+                addMessage(data.response, false);
+
+                // Check if user asked for recommendations
+                const recommendationKeywords = ['recommend', 'suggest', 'what should i read', 'what to read', 'i want to read', 'recommendation'];
+                const askedForRecommendation = recommendationKeywords.some(keyword =>
+                    message.toLowerCase().includes(keyword.toLowerCase())
+                );
+
+                if (askedForRecommendation) {
+                    // Create and append recommendation button
+                    const recommendationDiv = document.createElement('div');
+                    recommendationDiv.className = 'message ai-message';
+                    recommendationDiv.innerHTML = `
+                        <button class="recommendation-btn btn btn-link p-0" style="color: #0d6efd; text-decoration: underline; cursor: pointer;">
+                            🎯 Voir les recommandations
+                        </button>
+                        <div class="timestamp">${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
+                    `;
+                    chatMessages.appendChild(recommendationDiv);
+
+                    // Add event listener to the new button
+                    recommendationDiv.querySelector('.recommendation-btn').addEventListener('click', function() {
+                        window.location.href = '/recommendation';
+                    });
+                }
+
+                // Handle recommendations if present
+                if (data.recommendations && data.recommendations.length > 0) {
+                    setTimeout(() => {
+                        showRecommendedNovels(data.recommendations);
+                    }, 500);
+                }
+
+            } catch (error) {
+                hideTypingIndicator();
+                addMessage("Sorry, an error occurred. Please try again.", false);
+                console.error('Error:', error);
+            }
+        };
+
+        function showRecommendedNovels(novelIds) {
+            // Create a container for recommendations
+            const recContainer = document.createElement('div');
+            recContainer.className = 'recommendations-container mt-3';
+            recContainer.innerHTML = `
+                <div class="recommendations-header mb-2">
+                    <strong>Recommended for you:</strong>
+                </div>
+                <div class="recommendations-list"></div>
+            `;
+
+            const recList = recContainer.querySelector('.recommendations-list');
+
+            // Fetch novel details from the page (since we're using Thymeleaf)
+            novelIds.forEach(novelId => {
+                const novelCard = document.querySelector(`.novel-card[data-id="${novelId}"]`);
+                if (novelCard) {
+                    const novelName = novelCard.querySelector('.novel-title').textContent;
+                    const novelCategory = novelCard.querySelector('.category').textContent;
+                    const novelImage = novelCard.querySelector('.novel-image').src;
+
+                    const novelElement = document.createElement('div');
+                    novelElement.className = 'recommended-novel mb-2 p-2 border rounded';
+                    novelElement.innerHTML = `
+                        <div class="d-flex align-items-center gap-2">
+                            <img src="${novelImage}" alt="${novelName}"
+                                 class="rounded" width="40" height="60" style="object-fit: cover;">
+                            <div>
+                                <strong>${novelName}</strong>
+                                <div class="text-muted small">${novelCategory}</div>
+                            </div>
+                        </div>
+                        <a href="/novels/detail/${novelId}" class="btn btn-sm btn-outline-primary mt-2 w-100">
+                            View Details
+                        </a>
+                    `;
+                    recList.appendChild(novelElement);
+                }
+            });
+
+            // Add to chat
+            chatMessages.appendChild(recContainer);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function showLoginPrompt() {
+            const loginPrompt = document.createElement('div');
+            loginPrompt.className = 'message ai-message';
+            loginPrompt.innerHTML = `
+                To get personalized recommendations, please log in or create an account.
+                <div class="d-flex gap-2 mt-2">
+                    <a href="/auth/login" class="btn btn-sm btn-primary">Login</a>
+                    <a href="/auth/signup" class="btn btn-sm btn-secondary">Sign Up</a>
+                </div>
+                <div class="timestamp">${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
+            `;
+            chatMessages.appendChild(loginPrompt);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+    }
+</script>
 </body>
 </html>

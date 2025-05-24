@@ -46,8 +46,11 @@ public class HistoryController {
             return "redirect:/auth/login";
         }
 
-        User user = userService.findById(userId);
-        List<Novel> recommended = novelService.getRecommendationsForUser(user);
+        // Get all novels
+        List<Novel> allNovels = novelService.getAllNovels();
+
+        // Get recommendations
+        List<Novel> recommended = userService.getRecommendedNovels(userId, allNovels);
 
         // Fetch author names for each novel
         recommended.forEach(novel -> {
