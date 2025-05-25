@@ -502,10 +502,12 @@
         <a th:href="@{/novels/{novelId}/pages/{pageNumber}/edit(novelId=${novel.id}, pageNumber=${page.pageNumber})}" class="btn btn-warning d-flex align-items-center gap-1">
             <i class="bi bi-pencil-fill"></i> Edit
         </a>
-        <a th:href="@{/novels/{novelId}/pages/{pageNumber}/delete(novelelId=${novel.id}, pageNumber=${page.pageNumber})}" class="btn btn-danger d-flex align-items-center gap-1"
+        <a th:href="@{/novels/{novelId}/pages/{pageNumber}/delete(novelId=${novel.id}, pageNumber=${page.pageNumber})}"
+           class="btn btn-danger d-flex align-items-center gap-1"
            onclick="return confirm('Are you sure you want to delete this page? This action cannot be undone.');">
             <i class="bi bi-trash-fill"></i> Delete
         </a>
+
     </div>
 
     <div class="text-center">

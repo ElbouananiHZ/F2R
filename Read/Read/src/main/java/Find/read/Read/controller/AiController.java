@@ -53,25 +53,17 @@ public class AiController {
             return redirectToRecommendationPage();
         }
 
-        if (isUserBored(userInput)) {
-            Map<String, Object> response = new HashMap<>();
-            response.put("response", "Click the button below to receive personalized recommendations.");
-            response.put("redirectTo", "/recommendation");
-            return Mono.just(ResponseEntity.ok(response));
-        }
+
 
         return processGeneralChat(userInput);
     }
 
-    private boolean isUserBored(String input) {
-        String lower = input.toLowerCase();
-        return lower.contains("bored") || lower.contains("boring") || lower.contains("i wanna read");
-    }
 
     private boolean isUserRequestingRecommendation(String input) {
         String lower = input.toLowerCase();
         return lower.contains("recommend") || lower.contains("recommendation") ||
-                lower.contains("i want to read") || lower.contains("suggest") || lower.contains("suggestion");
+                lower.contains("i want to read") || lower.contains("suggest")
+                || lower.contains("suggestion");
     }
 
     private Mono<ResponseEntity<Map<String, Object>>> redirectToRecommendationPage() {
