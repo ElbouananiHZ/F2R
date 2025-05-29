@@ -36,7 +36,9 @@ public class SecurityConfig {
                                         "/novels/search-page",
                                         "/novels/detail/**",
                                         "/novels/image/**",
-                                        "/novels/ranking"
+                                        "/novels/ranking",
+                                        "/rag-chat",          // <-- add this for your Thymeleaf chat page
+                                        "/api/rag/**"
                                 ).permitAll()
                                   // Protected AI generation endpoint:
                                 .requestMatchers("/api/ai/generate").authenticated()

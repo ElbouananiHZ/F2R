@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -202,6 +202,228 @@
             font-size: 1.2rem;
         }
 
+        /* Chat button styles */
+        .chat-button {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            box-shadow: 0 4px 20px rgba(78, 115, 223, 0.3);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .chat-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 25px rgba(78, 115, 223, 0.4);
+        }
+
+        .chat-options {
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            width: 200px;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            display: none;
+            flex-direction: column;
+            z-index: 1000;
+            overflow: hidden;
+        }
+
+        .chat-options.open {
+            display: flex;
+        }
+
+        .chat-option {
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .chat-option:hover {
+            background-color: #f8f9fa;
+        }
+
+        .chat-option i {
+            font-size: 1.2rem;
+        }
+
+        .ai-option {
+            color: var(--primary-color);
+        }
+
+        .service-option {
+            color: var(--accent-color);
+        }
+
+        /* Chat container styles (for both AI and Service) */
+        .chat-container {
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            width: 350px;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            display: none;
+            flex-direction: column;
+            z-index: 1000;
+            overflow: hidden;
+        }
+
+        .chat-container.open {
+            display: flex;
+        }
+
+        .ai-chat {
+            border: 2px solid var(--primary-color);
+        }
+
+        .service-chat {
+            border: 2px solid var(--accent-color);
+        }
+
+        .chat-header {
+            padding: 15px;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .ai-header {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .service-header {
+            background-color: var(--accent-color);
+            color: white;
+        }
+
+        .chat-body {
+            padding: 15px;
+            height: 300px;
+            overflow-y: auto;
+            background-color: #f8f9fa;
+        }
+
+        .chat-input-container {
+            padding: 15px;
+            background-color: white;
+            border-top: 1px solid #eee;
+        }
+
+        .chat-input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            resize: none;
+        }
+
+        .chat-send-btn {
+            margin-top: 10px;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .ai-send-btn {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .service-send-btn {
+            background-color: var(--accent-color);
+            color: white;
+        }
+
+        .chat-send-btn:hover {
+            opacity: 0.9;
+        }
+
+        .chat-close-btn {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        .message {
+            margin-bottom: 10px;
+            padding: 8px 12px;
+            border-radius: 8px;
+            max-width: 80%;
+            word-wrap: break-word;
+        }
+
+        .user-message {
+            background-color: #e3f2fd;
+            margin-left: auto;
+            border-bottom-right-radius: 0;
+        }
+
+        .ai-message {
+            background-color: #f1f1f1;
+            margin-right: auto;
+            border-bottom-left-radius: 0;
+        }
+
+        .typing-indicator {
+            display: flex;
+            padding: 10px;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--secondary-color);
+            border-radius: 50%;
+            margin: 0 2px;
+            animation: typingAnimation 1.4s infinite ease-in-out;
+        }
+
+        .typing-dot:nth-child(1) { animation-delay: 0s; }
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes typingAnimation {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-5px); }
+        }
+
+        /* Recommendation button styles */
+        .recommendation-btn {
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .recommendation-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
         /* Responsive adjustments */
         @media (max-width: 768px) {
             .hero-title {
@@ -215,6 +437,12 @@
             .navbar-brand {
                 font-size: 1.5rem;
             }
+
+            .chat-container, .chat-options {
+                width: 90%;
+                right: 5%;
+                bottom: 80px;
+            }
         }
 
         /* Animation */
@@ -222,7 +450,9 @@
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
-
+        .fade-in {
+            animation: fadeIn 0.6s ease-in-out;
+        }
         .animated-card {
             animation: fadeIn 0.6s ease forwards;
         }
@@ -236,7 +466,7 @@
 <!-- Navigation Bar -->
 <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm py-3">
     <div class="container">
-        <a class="navbar-brand" href="/">Find2Read</a>
+        <a class="navbar-brand" href="">Find2Read</a>
 
         <!-- Hamburger menu button -->
         <button class="btn btn-outline-primary ms-auto d-flex align-items-center" type="button" data-bs-toggle="offcanvas" data-bs-target="#mainMenu">
@@ -281,7 +511,8 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
+        <!-- Only show "Ajouter un Roman" if authenticated -->
+        <div class="col-md-4" sec:authorize="isAuthenticated()">
             <div class="card feature-card animated-card card-2">
                 <div class="card-body text-center p-4">
                     <div class="feature-icon">
@@ -293,7 +524,8 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
+        <!-- Only show "Votre Bibliothèque" if authenticated -->
+        <div class="col-md-4" sec:authorize="isAuthenticated()">
             <div class="card feature-card animated-card card-3">
                 <div class="card-body text-center p-4">
                     <div class="feature-icon">
@@ -316,33 +548,91 @@
     </div>
     <div class="offcanvas-body p-0">
         <div sec:authorize="isAuthenticated()">
+            <a href="/" class="menu-item">
+                <i class="bi bi-house"></i> Accueil
+            </a>
+            <a href="/novels" class="menu-item">
+                <i class="bi bi-book"></i> Tous les Romans
+            </a>
             <a href="/profile" class="menu-item">
                 <i class="bi bi-person"></i> Mon Profil
             </a>
-            <a href="/library" class="menu-item">
-                <i class="bi bi-bookmark-heart"></i> Ma Bibliothèque
+            <a href="/novels/about" class="menu-item">
+                <i class="bi bi-info-circle"></i> À propos
             </a>
             <a href="/novels/new" class="menu-item">
                 <i class="bi bi-plus-circle"></i> Ajouter un Roman
             </a>
+            <a href="/library" class="menu-item">
+                <i class="bi bi-bookmark-heart"></i> Ma Bibliothèque
+            </a>
+            <div th:unless="${isAuthenticated}">
+                <a href="/auth/login" class="menu-item"><i class="bi bi-box-arrow-in-right"></i> Connexion</a>
+                <a href="/auth/signup" class="menu-item"><i class="bi bi-person-plus"></i> Inscription</a>
+                <a href="#" class="menu-item" onclick="document.getElementById('logoutForm').submit();">
+                    <i class="bi bi-box-arrow-right"></i> Déconnexion
+                </a>
+                <form id="logoutForm" th:action="@{/logout}" method="post" style="display: none;"></form>
+            </div>
         </div>
-        <div th:unless="${isAuthenticated}">
+        <div sec:authorize="!isAuthenticated()">
+            <a href="/" class="menu-item">
+                <i class="bi bi-house"></i> Accueil
+            </a>
+            <a href="/novels/about" class="menu-item">
+                <i class="bi bi-info-circle"></i> À propos
+            </a>
             <a href="/auth/login" class="menu-item">
                 <i class="bi bi-box-arrow-in-right"></i> Connexion
             </a>
-            <a href="/auth/signup" class="menu-item">
-                <i class="bi bi-person-plus"></i> Inscription
-            </a>
         </div>
-        <a href="/" class="menu-item">
-            <i class="bi bi-house"></i> Accueil
-        </a>
-        <a href="/novels" class="menu-item">
-            <i class="bi bi-book"></i> Tous les Romans
-        </a>
-        <a href="/novels/about" class="menu-item">
-            <i class="bi bi-info-circle"></i> À propos
-        </a>
+    </div>
+</div>
+
+<!-- Floating Chat Button -->
+<button class="chat-button" id="chatButton">
+    <i class="bi bi-chat-dots"></i>
+</button>
+
+<!-- Chat Options Menu -->
+<div class="chat-options" id="chatOptions">
+    <div class="chat-option ai-option" id="aiOption">
+        <i class="bi bi-robot"></i>
+        <span>AI Assistant</span>
+    </div>
+    <div class="chat-option service-option" id="serviceOption">
+        <i class="bi bi-headset"></i>
+        <span>Customer Service</span>
+    </div>
+</div>
+
+<!-- AI Chat Container -->
+<div class="chat-container ai-chat" id="aiChatContainer">
+    <div class="chat-header ai-header">
+        <span>AI Assistant</span>
+        <button class="chat-close-btn" id="closeAiChatBtn">
+            <i class="bi bi-x"></i>
+        </button>
+    </div>
+    <div class="chat-body" id="aiChatBody"></div>
+    <div class="chat-input-container">
+        <textarea class="chat-input" id="aiChatInput" rows="3" placeholder="Ask me anything about novels..."></textarea>
+        <button class="chat-send-btn ai-send-btn" id="sendAiChatBtn">Send</button>
+    </div>
+</div>
+
+<!-- Service Chat Container -->
+<div class="chat-container service-chat" id="serviceChatContainer">
+    <div class="chat-header service-header">
+        <span>Customer Service</span>
+        <button class="chat-close-btn" id="closeServiceChatBtn">
+            <i class="bi bi-x"></i>
+        </button>
+    </div>
+    <div class="chat-body" id="serviceChatBody"></div>
+    <div class="chat-input-container">
+        <textarea class="chat-input" id="serviceChatInput" rows="3" placeholder="How can we help you?"></textarea>
+        <button class="chat-send-btn service-send-btn" id="sendServiceChatBtn">Send</button>
     </div>
 </div>
 
@@ -375,7 +665,211 @@
         document.querySelectorAll('.feature-card').forEach(card => {
             observer.observe(card);
         });
+
+        // Chat functionality
+        const chatButton = document.getElementById('chatButton');
+        const chatOptions = document.getElementById('chatOptions');
+        const aiOption = document.getElementById('aiOption');
+        const serviceOption = document.getElementById('serviceOption');
+
+        const aiChatContainer = document.getElementById('aiChatContainer');
+        const closeAiChatBtn = document.getElementById('closeAiChatBtn');
+        const sendAiChatBtn = document.getElementById('sendAiChatBtn');
+        const aiChatInput = document.getElementById('aiChatInput');
+        const aiChatBody = document.getElementById('aiChatBody');
+
+        const serviceChatContainer = document.getElementById('serviceChatContainer');
+        const closeServiceChatBtn = document.getElementById('closeServiceChatBtn');
+        const sendServiceChatBtn = document.getElementById('sendServiceChatBtn');
+        const serviceChatInput = document.getElementById('serviceChatInput');
+        const serviceChatBody = document.getElementById('serviceChatBody');
+
+        // Toggle chat options when clicking the main chat button
+        chatButton.addEventListener('click', function(e) {
+            e.stopPropagation();
+            chatOptions.classList.toggle('open');
+            // Close any open chat containers
+            aiChatContainer.classList.remove('open');
+            serviceChatContainer.classList.remove('open');
+        });
+
+        // Open AI chat when clicking AI option
+        aiOption.addEventListener('click', function(e) {
+            e.stopPropagation();
+            chatOptions.classList.remove('open');
+            aiChatContainer.classList.add('open');
+            aiChatInput.focus();
+        });
+
+        // Open Service chat when clicking Service option
+        serviceOption.addEventListener('click', function(e) {
+            e.stopPropagation();
+            chatOptions.classList.remove('open');
+            serviceChatContainer.classList.add('open');
+            serviceChatInput.focus();
+        });
+
+        // Close chat options when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!chatOptions.contains(e.target) && e.target !== chatButton) {
+                chatOptions.classList.remove('open');
+            }
+        });
+
+        // Close AI chat
+        closeAiChatBtn.addEventListener('click', function() {
+            aiChatContainer.classList.remove('open');
+        });
+
+        // Close Service chat
+        closeServiceChatBtn.addEventListener('click', function() {
+            serviceChatContainer.classList.remove('open');
+        });
+
+        // Send AI message
+        sendAiChatBtn.addEventListener('click', sendAiMessage);
+        aiChatInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendAiMessage();
+            }
+        });
+
+        // Send Service message
+        sendServiceChatBtn.addEventListener('click', sendServiceMessage);
+        serviceChatInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendServiceMessage();
+            }
+        });
+
+        function sendAiMessage() {
+            const message = aiChatInput.value.trim();
+            if (!message) return;
+
+            // Add user message to chat
+            addMessage(aiChatBody, message, 'user-message');
+            aiChatInput.value = '';
+
+            // Show loading indicator
+            const loadingId = 'ai-' + Date.now();
+            addMessage(aiChatBody, 'Thinking...', 'ai-message', loadingId);
+
+            // Check if user asked for recommendations
+            const recommendationKeywords = ['recommend', 'suggest', 'what should i read', 'what to read', 'i want to read', 'recommendation'];
+            const askedForRecommendation = recommendationKeywords.some(keyword =>
+                message.toLowerCase().includes(keyword.toLowerCase())
+            );
+
+            if (askedForRecommendation) {
+                // Remove loading message
+                const loadingElement = document.getElementById(loadingId);
+                if (loadingElement) loadingElement.remove();
+
+                // Create recommendation response
+                const recommendationDiv = document.createElement('div');
+                recommendationDiv.className = 'message ai-message';
+                recommendationDiv.innerHTML = `
+                    <p>I can recommend some great books for you!</p>
+                    <button class="btn btn-primary recommendation-btn" style="margin-top: 8px;">
+                        <i class="bi bi-book"></i> Get Personalized Recommendations
+                    </button>
+                `;
+                aiChatBody.appendChild(recommendationDiv);
+
+                // Add event listener to the recommendation button
+                recommendationDiv.querySelector('.recommendation-btn').addEventListener('click', function() {
+                    window.location.href = '/recommendation';
+                });
+
+                aiChatBody.scrollTop = aiChatBody.scrollHeight;
+                return;
+            }
+
+            // Send to AI endpoint (simple AI from list.html)
+            fetch('/api/ai/generate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('jwtToken') || ''}`
+                },
+                body: JSON.stringify({ prompt: message })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    // Remove loading message
+                    const loadingElement = document.getElementById(loadingId);
+                    if (loadingElement) loadingElement.remove();
+
+                    if (data.response) {
+                        addMessage(aiChatBody, data.response, 'ai-message');
+                    } else {
+                        addMessage(aiChatBody, "Sorry, I couldn't process your request.", 'ai-message');
+                    }
+                })
+                .catch(error => {
+                    const loadingElement = document.getElementById(loadingId);
+                    if (loadingElement) loadingElement.remove();
+                    addMessage(aiChatBody, "Error connecting to the AI service.", 'ai-message');
+                });
+        }
+
+        function sendServiceMessage() {
+            const message = serviceChatInput.value.trim();
+            if (!message) return;
+
+            // Add user message to chat
+            addMessage(serviceChatBody, message, 'user-message');
+            serviceChatInput.value = '';
+
+            // Show loading indicator
+            const loadingId = 'service-' + Date.now();
+            addMessage(serviceChatBody, 'Thinking...', 'ai-message', loadingId);
+
+            // Send to RAG endpoint (customer service)
+            fetch('/api/rag/query', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ text: message }),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    // Remove loading message
+                    const loadingElement = document.getElementById(loadingId);
+                    if (loadingElement) loadingElement.remove();
+
+                    if (data.response) {
+                        addMessage(serviceChatBody, data.response, 'ai-message');
+                    } else {
+                        addMessage(serviceChatBody, "Sorry, I encountered an error. Please try again.", 'ai-message');
+                    }
+                })
+                .catch(error => {
+                    const loadingElement = document.getElementById(loadingId);
+                    if (loadingElement) loadingElement.remove();
+                    addMessage(serviceChatBody, "Error connecting to the server. Please try again later.", 'ai-message');
+                });
+        }
+
+        function addMessage(container, text, className, id = null) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${className}`;
+            messageDiv.textContent = text;
+            if (id) messageDiv.id = id;
+            container.appendChild(messageDiv);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        // Add welcome message to AI chat
+        addMessage(aiChatBody, "Hello! I'm your AI assistant. How can I help you with novels today?", 'ai-message');
+
+        // Add welcome message to Service chat
+        addMessage(serviceChatBody, "Hello! This is customer service. How can we help you?", 'ai-message');
     });
 </script>
+
 </body>
-</html>
+</html>M

@@ -457,7 +457,7 @@
         <a href="/novels/about" class="menu-item"><i class="bi bi-info-circle"></i> À propos</a>
         <a href="/novels/new" class="menu-item"><i class="bi bi-plus-circle"></i> Ajouter un Roman</a>
         <a href="/novels/ranking" class="menu-item"><i class="bi bi-star-fill"></i> Classement</a>
-
+        <a href="/rag-chat" class="menu-item"><i class="bi bi-chat-dots"></i> Chat RAG</a>
         <div sec:authorize="isAuthenticated()">
             <a href="/profile" class="menu-item"><i class="bi bi-person"></i> Mon Profil</a>
             <a href="/library" class="menu-item"><i class="bi bi-bookmark-heart"></i> Ma Bibliothèque</a>
@@ -686,7 +686,7 @@
                     recommendationDiv.className = 'message ai-message';
                     recommendationDiv.innerHTML = `
                         <button class="recommendation-btn btn btn-link p-0" style="color: #0d6efd; text-decoration: underline; cursor: pointer;">
-                            🎯 click  on that link
+                            🎯 click on that link
                         </button>
                         <div class="timestamp">${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
                     `;

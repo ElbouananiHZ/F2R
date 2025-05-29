@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>RAG Chat</title>
+</head>
+<body>
+
+<!-- Button to open chat -->
+<button id="openChatBtn">Open Chat</button>
+
+<!-- Chat container initially hidden -->
+<div id="chatContainer" style="display:none; border: 1px solid #ccc; padding: 15px; margin-top: 10px; width: 400px;">
+    <textarea id="questionInput" rows="4" style="width:100%;" placeholder="  Please ask any question related to this website. I'm here to help!"></textarea><br/><br/>
+    <button id="sendBtn">Send</button>
+    <button id="closeBtn">Close</button>
+
+    <div id="responseArea" style="margin-top: 15px; white-space: pre-wrap;"></div>
+</div>
+
+<script>
+    const openBtn = document.getElementById('openChatBtn');
+    const chatContainer = document.getElementById('chatContainer');
+    const closeBtn = document.getElementById('closeBtn');
+    const sendBtn = document.getElementById('sendBtn');
+    const questionInput = document.getElementById('questionInput');
+    const responseArea = document.getElementById('responseArea');
+
+    openBtn.addEventListener('click', () => {
+        chatContainer.style.display = 'block';
+        openBtn.style.display = 'none';
+    });
+
+    closeBtn.addEventListener('click', () => {
+        chatContainer.style.display = 'none';
+        openBtn.style.display = 'inline-block';
+        questionInput.value = '';
+        responseArea.textContent = '';
+    });
+
+    sendBtn.addEventListener('click', async () => {
+        const question = questionInput.value.trim();
+        if (!question) {
+            alert('Please enter a question');
+            return;
+        }
+        responseArea.textContent = 'Loading...';
+
+        try {
+            const response = await fetch('/api/rag/query', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ text: question }),
+            });
+
+            const data = await response.json();
+            if (response.ok) {
+                responseArea.textContent = 'Answer:\n' + data.response;
+            } else {
+                responseArea.textContent = 'Error:\n' + (data.error || 'Unknown error');
+            }
+        } catch (error) {
+            responseArea.textContent = 'Error:\n' + error.message;
+        }
+    });
+</script>
+
+</body>
+</html>
